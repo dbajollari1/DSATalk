@@ -7,16 +7,27 @@ import { ObjectId } from 'mongodb';
 /* will change currently same code as lab 1, will use as a shell */
 const create = async (
     title,
-    ingredients,
-    skillLevel,
-    steps,
     userId,
-    username
+    username,
+    content,
+    image,
+    url
 ) => {
-    title = helpers.checkTitle(title,"title"); 
-    ingredients = helpers.checkIngredientsArr(ingredients,"ingredients array");
-    skillLevel = helpers.checkSkillLevel(skillLevel,"skill level");
-    steps = helpers.checkStepsArr(steps,"steps array"); 
+    title = helpers.checkTitle(title); 
+    userId = helpers.checkId(userId,"User ID");
+    usernmae = helpers.validateUsername(username);
+    content = helpers.checkContent(content);
+    if(image) { 
+        image = "" //will change later
+    } else { 
+        image = ""
+    }
+    if (url) { 
+        url = helpers.checkURL(url); 
+    } else { 
+        url = ""
+    }
+    image = "" //for now always set image to empty will need to configure s3 bucket later
 
     const userCollection = await users();
     const userCheck1 = await userCollection.findOne({ username: username });
@@ -24,60 +35,59 @@ const create = async (
     const userCheck2 = await userCollection.findOne({ _id: new ObjectId(userId) });
     if (!userCheck2) throw "Error: Cannot find user with that id!";
 
-    let reviews = []; 
+    let replies = []; 
     let likes = []; 
     let user = {"_id": new ObjectId(userId), "username": username}
-    let newRecipe = { 
+    let newDiscussion = { 
         title: title, 
-        ingredients: ingredients, 
-        skillLevel: skillLevel, 
-        steps: steps, 
-        user: user,
-        reviews: reviews, 
+        user: user, 
+        content: content, 
+        image: "", 
+        url: url,
         likes: likes,
+        replies: replies
     }; 
 
-
-    const recipeCollection = await recipes();
-    const insertInfo = await recipeCollection.insertOne(newRecipe);
-    if (!insertInfo.acknowledged || !insertInfo.insertedId) throw 'Error: Could not add new recipe!';
+    const discussionCollection = await discussions();
+    const insertInfo = await discussionCollection.insertOne(newDiscussion);
+    if (!insertInfo.acknowledged || !insertInfo.insertedId) throw 'Error: Could not add new discussion!';
   
     const newId = insertInfo.insertedId.toString();
   
-    const recipe = await get(newId);
-    return recipe;
+    const discussion = await get(newId);
+    return discussion;
 }
 
 const getAll = async (pageNum) => {
     //code adapted from, getAllDogs() function in, https://github.com/stevens-cs546-cs554/CS-546/blob/master/lecture_04/dogs.js
     let skipVal = 0;
-    let limitVal = 50; 
+    let limitVal = 10; 
     if (pageNum > 1) {
         for(let i = 1; i < pageNum; i++) { 
             skipVal += 50; 
         }
     }
-    const recipeCollection = await recipes();
-    let recipeList = await recipeCollection.find({}).skip(skipVal).limit(limitVal).toArray();
-    if (!recipeList) throw 'Error: Could not get all recipes!';
+    const discussionCollection = await discussions();
+    let discussionList = await discussionCollection.find({}).skip(skipVal).limit(limitVal).toArray();
+    if (!discussionList) throw 'Error: Could not get all discussion!';
     
-    recipeList = recipeList.map((element) => {
+    discussionList = discussionList.map((element) => {
         element._id = element._id.toString();
         return element;
     });
-    return recipeList;
+    return discussionList;
 };
 
 
 const get = async (id) => {
     //code adapted from, getDogById(id) function in, https://github.com/stevens-cs546-cs554/CS-546/blob/master/lecture_04/dogs.js
     if (!id) throw "Error: No ID passed to function!";
-    id = helpers.checkId(id, "ID")
-    const recipeCollection = await recipes();
-    const recipe = await recipeCollection.findOne({ _id: new ObjectId(id) });
-    if (recipe === null) throw "Error: No recipe found with that ID";
-    recipe._id = recipe._id.toString();
-    return recipe;
+    id = helpers.checkId(id, "Discussion ID")
+    const discussionCollection = await discussions();
+    const discussion = await discussionCollection.findOne({ _id: new ObjectId(id) });
+    if (discussion === null) throw "Error: No discussion found with that ID";
+    discussion._id = discussion._id.toString();
+    return discussion;
 };
 
 
@@ -85,28 +95,28 @@ const remove = async (id) => {
     //code adapted from, removeDog(id) function in, https://github.com/stevens-cs546-cs554/CS-546/blob/master/lecture_04/dogs.js
     if (!id) throw "Error: No ID passed to function!";
     id = helpers.checkId(id, "ID")
-    const recipeCollection = await recipes();
+    const discussionCollection = await discussions();
 
-    const deletionInfo = await recipeCollection.findOneAndDelete({
+    const deletionInfo = await discussionCollection.findOneAndDelete({
         _id: new ObjectId(id)
     });
     if (deletionInfo.lastErrorObject.n === 0) {
-        throw `Could not delete recipe with id of ${id}`;
+        throw `Could not delete discussion with id of ${id}`;
     }
     return `${deletionInfo.value.title} has been successfully deleted!`;
 };
 
 
 const update = async (
-    recipeId,
+    discussionId,
     title,
-    ingredients,
-    skillLevel,
-    steps,
     userId,
-    username
+    username,
+    content,
+    image,
+    url
 ) => {
-    recipeId = helpers.checkId(recipeId, "Recipe ID"); 
+    discussionId = helpers.checkId(discussionId,"Discussion ID");
     userId = helpers.checkId(userId, "User ID"); 
     username = helpers.validateUsername(username); 
 
@@ -116,70 +126,75 @@ const update = async (
     const userCheck2 = await userCollection.findOne({ _id: new ObjectId(userId) });
     if (!userCheck2) throw "Error: Cannot find user with that id!";
 
-
-    const recipe = await get(recipeId);
-
-    if (recipe.user._id.toString() !== userId) throw "Error: Cannot update other users recipe!"
-    if (recipe.user.username !== username) throw "Error: Cannot update other users recipe!"
+    const discussion = await get(discussionId);
+    if (discussion.user._id.toString() !== userId) throw "Error: Cannot update other users discussion!"
+    if (discussion.user.username !== username) throw "Error: Cannot update other users discussion!"
     
+
+
+    userId = helpers.checkId(userId,"User ID");
+    usernmae = helpers.validateUsername(username);
+    content = helpers.checkContent(content);
+
     if (title !== null) { 
-        title = helpers.checkTitle(title,"title"); 
-        if (title === recipe.title) throw "Error: Cannot update recipe field with same values as before!";
+        title = helpers.checkTitle(title); 
+        if (title === discussion.title) throw "Error: Cannot update discussion field with same values as before!";
     } else { 
-        title = recipe.title; 
+        title = discussion.title; 
     }
 
-    if (ingredients !== null) { 
-        ingredients = helpers.checkIngredientsArr(ingredients,"ingredients"); 
-        if (ingredients === recipe.ingredients) throw "Error: Cannot update recipe field with same values as before!";
+    if (content !== null) { 
+        content = helpers.checkContent(content); 
+        if (content === discussion.content) throw "Error: Cannot update discussion field with same values as before!";
     } else { 
-        ingredients = recipe.ingredients; 
+        content = discussion.content;
     }
 
-    if (skillLevel !== null) { 
-        skillLevel = helpers.checkSkillLevel(skillLevel,"skill level"); 
-        if (skillLevel === recipe.skillLevel) throw "Error: Cannot update recipe field with same values as before!";
+    if (url !== null) { 
+        url = helpers.checkURL(url); 
+        if (url === discussion.url) throw "Error: Cannot update discussion field with same values as before!";
     } else { 
-        skillLevel = recipe.skillLevel; 
-    }
-
-    if (steps !== null) { 
-        steps = helpers.checkStepsArr(steps,"steps"); 
-        if (steps === recipe.steps) throw "Error: Cannot update recipe field with same values as before!";
-    } else { 
-        steps = recipe.steps; 
+        url = discussion.url;
     }
 
 
-    let updatedRecipe = { 
+    // will need to figure out logic to deal with s3 bucket later
+    // if (image !== null) { 
+    //     image = helpers.checkImage(image);  
+    //     if (image === discussion.image) throw "Error: Cannot update discussion field with same values as before!";
+    // } else { 
+    //     image = discussion.image;
+    // }
+
+    let updatedDiscussion = { 
         title: title, 
-        ingredients: ingredients, 
-        skillLevel: skillLevel, 
-        steps: steps, 
-        user: recipe.user,
-        reviews: recipe.reviews, 
-        likes: recipe.likes,
+        user: discussion.user, 
+        content: content, 
+        image: discussion.image, 
+        url: url,
+        likes: discussion.likes,
+        replies: discussion.replies
     }; 
-    const recipeCollection = await recipes();
+
+    const discussionCollection = await discussions();
   
-    const updatedInfo = await recipeCollection.findOneAndUpdate(
-      {_id: new ObjectId(recipeId)},
-      {$set: updatedRecipe},
+    const updatedInfo = await discussionCollection.findOneAndUpdate(
+      {_id: new ObjectId(discussionId)},
+      {$set: updatedDiscussion},
       {returnDocument: 'after'}
     );
 
-    const newRecipe = await get(recipeId);
-    return newRecipe;
-
+    const newDiscussion = await get(discussionId);
+    return newDiscussion;
 };
 
 const addLike = async (
-    recipeId, 
+    discussionId, 
     userId, 
     username
 ) => {
-    if (!recipeId || !userId || !username) throw "Error: All fields need to have valid values!";
-    recipeId = helpers.checkId(recipeId, "recipeId");
+    if (!discussionId || !userId || !username) throw "Error: All fields need to have valid values!";
+    discussionId = helpers.checkId(discussionId, "Discussion ID");
     userId = helpers.checkId(userId, "userId");
     username = helpers.validateUsername(username,"username");
 
@@ -189,11 +204,11 @@ const addLike = async (
     const userCheck2 = await userCollection.findOne({ _id: new ObjectId(userId) });
     if (!userCheck2) throw "Error: Cannot find user with that id!";
   
-    const recipeCollection = await recipes();
-    const recipe = await recipeCollection.findOne({ _id: new ObjectId(recipeId) });
-    if (recipe === null) throw "Error: No recipe found with that ID";
+    const discussionCollection = await discussions();
+    const discussion = await discussionCollection.findOne({ _id: new ObjectId(discussionId) });
+    if (discussion === null) throw "Error: No discussion found with that ID";
 
-    let curLikes = recipe.likes; 
+    let curLikes = discussion.likes; 
     let addLike = true; 
     let removeLike = false
     for(let i = 0; i < curLikes.length; i++) { 
@@ -204,25 +219,25 @@ const addLike = async (
     }
     let updatedInfo = 0;
     if (addLike) { 
-        updatedInfo = await recipeCollection.findOneAndUpdate(
-            { _id: new ObjectId(recipeId) },
+        updatedInfo = await discussionCollection.findOneAndUpdate(
+            { _id: new ObjectId(discussionId) },
             { $push: { likes: userId } },
             { returnDocument: 'after' }
           );
     } else if (removeLike) { 
-        updatedInfo = await recipeCollection.findOneAndUpdate(
-            { _id: new ObjectId(recipeId) },
+        updatedInfo = await discussionCollection.findOneAndUpdate(
+            { _id: new ObjectId(discussionId) },
             { $pull: { likes: userId } },
             { returnDocument: 'after' }
           );
     }
 
 
-    const updatedRecipeCollection = await recipes();
-    const updatedRecipe = await updatedRecipeCollection.findOne({ _id: new ObjectId(recipeId) });
-    updatedRecipe._id = updatedRecipe._id.toString();
+    const updatedDiscussionCollection = await discussions();
+    const updatedDiscussion = await updatedDiscussionCollection.findOne({ _id: new ObjectId(discussionId) });
+    updatedDiscussion._id = updatedDiscussion._id.toString();
     
-    return updatedRecipe; 
+    return updatedDiscussion; 
 }  
 
 export default {create, getAll, get, remove, update, addLike}; 
