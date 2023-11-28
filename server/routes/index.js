@@ -1,9 +1,11 @@
 import discussionRoutes from './discussions.js';
 import authRoutes from './auth_routes.js'
+import problemRoutes from './problems.js'
 
 
 const constructorMethod = (app) => {
   app.use('/discussions', discussionRoutes);
+  app.use('/problems', problemRoutes);
   app.use(authRoutes);
 
   app.use('*', (req, res) => {

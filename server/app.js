@@ -3,16 +3,16 @@ const app = express();
 import session from 'express-session';
 import configRoutes from './routes/index.js';
 
-// app.use(express.json());
+app.use(express.json());
 
-// app.use(
-//   session({
-//     name: 'AuthCookie',
-//     secret: "This is a secret for the CS554 Final Project",
-//     saveUninitialized: false,
-//     resave: false
-//   })
-// );
+app.use(
+  session({
+    name: 'AuthCookie',
+    secret: "This is a secret for the CS554 Final Project",
+    saveUninitialized: false,
+    resave: false
+  })
+);
 
 
 // const pathsAccessed = {};

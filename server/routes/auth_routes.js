@@ -15,7 +15,6 @@ router
       next();
     },
     async (req, res) => {
-    //code here for POST
     const signupInfo = req.body;
     try {
       if (!signupInfo || Object.keys(signupInfo).length === 0) throw 'There are no fields in the request body'; 
@@ -25,7 +24,7 @@ router
       signupInfo.username = helpers.validateUsername(signupInfo.username);
       signupInfo.password = helpers.validatePassword(signupInfo.password);
 
-  
+      //here we will use the firebase auth to create a user
       const createdUser = await userData.createUser(signupInfo.name, signupInfo.username, signupInfo.password);
       res.status(200).json(createdUser);
     } catch (e) {
@@ -44,10 +43,7 @@ router
       next();
     },
     async (req, res) => {
-    //code here for POST
     const loginInfo = req.body;
-
-    //console.log(Object.keys(loginInfo));
     try {
       if (!loginInfo || Object.keys(loginInfo).length === 0) throw 'There are no fields in the request body';
       if (!loginInfo.username || !loginInfo.password) throw 'Not all neccessary fields provided in request body';
@@ -55,6 +51,8 @@ router
       loginInfo.username = helpers.validateUsername(loginInfo.username);
       loginInfo.password = helpers.validatePassword(loginInfo.password);
 
+
+      //user firebase auth to check if user exists and if so log them in
       const loggedInUser = await userData.checkUser(loginInfo.username,loginInfo.password);
       req.session.user = loggedInUser;
       return res.status(200).json(loggedInUser);
@@ -75,6 +73,7 @@ router.route('/logout').get(
     next();
   },
   async (req, res) => {
+    //here we will use the firebase auth to log out the user
     req.session.destroy();
     return res.status(200).json("You have been successfully logged out"); 
 });
