@@ -7,16 +7,27 @@ import { ObjectId } from 'mongodb';
 /* will change currently same code as lab 1, will use as a shell */
 const create = async (
     title,
-    ingredients,
-    skillLevel,
-    steps,
     userId,
-    username
+    username,
+    content,
+    image,
+    url
 ) => {
-    title = helpers.checkTitle(title,"title"); 
-    ingredients = helpers.checkIngredientsArr(ingredients,"ingredients array");
-    skillLevel = helpers.checkSkillLevel(skillLevel,"skill level");
-    steps = helpers.checkStepsArr(steps,"steps array"); 
+    title = helpers.checkTitle(title); 
+    userId = helpers.checkId(userId,"User ID");
+    usernmae = helpers.validateUsername(username);
+    content = helpers.checkContent(content);
+    if(image) { 
+
+    } else { 
+        image = ""
+    }
+    if (url) { 
+        url = helpers.checkURL(url); 
+    } else { 
+        url = ""
+    }
+    image = "" //for now always set image to empty will need to configure s3 bucket later
 
     const userCollection = await users();
     const userCheck1 = await userCollection.findOne({ username: username });
@@ -24,28 +35,27 @@ const create = async (
     const userCheck2 = await userCollection.findOne({ _id: new ObjectId(userId) });
     if (!userCheck2) throw "Error: Cannot find user with that id!";
 
-    let reviews = []; 
+    let replies = []; 
     let likes = []; 
     let user = {"_id": new ObjectId(userId), "username": username}
-    let newRecipe = { 
+    let newDiscussion = { 
         title: title, 
-        ingredients: ingredients, 
-        skillLevel: skillLevel, 
-        steps: steps, 
-        user: user,
-        reviews: reviews, 
+        user: user, 
+        content: content, 
+        image: "", 
+        url: url,
         likes: likes,
+        replies: replies
     }; 
 
-
-    const recipeCollection = await recipes();
-    const insertInfo = await recipeCollection.insertOne(newRecipe);
-    if (!insertInfo.acknowledged || !insertInfo.insertedId) throw 'Error: Could not add new recipe!';
+    const discussionCollection = await discussions();
+    const insertInfo = await discussionCollection.insertOne(newDiscussion);
+    if (!insertInfo.acknowledged || !insertInfo.insertedId) throw 'Error: Could not add new discussion!';
   
     const newId = insertInfo.insertedId.toString();
   
-    const recipe = await get(newId);
-    return recipe;
+    const discussion = await get(newId);
+    return discussion;
 }
 
 const getAll = async (pageNum) => {
