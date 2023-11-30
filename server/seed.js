@@ -67,7 +67,21 @@ let getDiscussion2 = await discussions.get(discussion2._id);
 console.log(getDiscussion2)
 
 
+let reply1Comment1Discussion1 = await replies.create(discussion1._id,comment1Discussion1._id,user1._id,user1.username,"Thats nice, hope you enjor the site!");
+console.log(reply1Comment1Discussion1)
+let reply2Comment1Discussion1 = await replies.create(discussion1._id,comment1Discussion1._id,user2._id,user2.username,"Awesome, really liking the site");
+console.log(reply2Comment1Discussion1)
 
+let reply1Comment2Discussion1 = await replies.create(discussion1._id,comment2Discussion1._id,user2._id,user2.username,"Lets learn DSA!");
+console.log(reply1Comment2Discussion1)
+let reply2Comment2Discussion1 = await replies.create(discussion1._id,comment2Discussion1._id,user1._id,user1.username,"Great site idea!");
+console.log(reply2Comment2Discussion1)
+
+
+let reply1Comment1Discussion2 = await replies.create(discussion2._id,comment1Discussion2._id,user2._id,user2.username,"Lets learn DSA!");
+console.log(reply1Comment1Discussion2)
+let reply2Comment1Discussion2 = await replies.create(discussion2._id,comment1Discussion2._id,user1._id,user1.username,"Great site idea!");
+console.log(reply2Comment1Discussion2)
 
 
 let getAgainDiscussion1 = await discussions.get(discussion1._id); 

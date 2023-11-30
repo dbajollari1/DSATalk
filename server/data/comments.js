@@ -52,6 +52,7 @@ const create = async (
 
 
     newComment._id = newComment._id.toString();
+    newComment.authorId = newComment.authorId.toString();
     return newComment;
 }
 
