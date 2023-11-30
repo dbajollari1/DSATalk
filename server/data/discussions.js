@@ -15,7 +15,7 @@ const create = async (
 ) => {
     title = helpers.checkTitle(title); 
     userId = helpers.checkId(userId,"User ID");
-    usernmae = helpers.validateUsername(username);
+    username = helpers.validateUsername(username);
     content = helpers.checkContent(content);
     if(image) { 
         image = "" //will change later
@@ -35,7 +35,11 @@ const create = async (
     const userCheck2 = await userCollection.findOne({ _id: new ObjectId(userId) });
     if (!userCheck2) throw "Error: Cannot find user with that id!";
 
-    let replies = []; 
+    const currentDate = new Date();
+    const timestamp = currentDate.toISOString();
+
+
+    let comments = []; 
     let likes = []; 
     let user = {"_id": new ObjectId(userId), "username": username}
     let newDiscussion = { 
@@ -44,8 +48,9 @@ const create = async (
         content: content, 
         image: "", 
         url: url,
+        timestamp: timestamp,
         likes: likes,
-        replies: replies
+        comments: comments
     }; 
 
     const discussionCollection = await discussions();
@@ -73,6 +78,7 @@ const getAll = async (pageNum) => {
     
     discussionList = discussionList.map((element) => {
         element._id = element._id.toString();
+        element.user._id = element.user._id.toString();
         return element;
     });
     return discussionList;
@@ -87,6 +93,16 @@ const get = async (id) => {
     const discussion = await discussionCollection.findOne({ _id: new ObjectId(id) });
     if (discussion === null) throw "Error: No discussion found with that ID";
     discussion._id = discussion._id.toString();
+    discussion.comments = discussion.comments.map((element) => {
+        element._id = element._id.toString();
+        element.authorId= element.authorId.toString();
+        element.replies = element.replies.map((elementReply) => {
+            elementReply._id = elementReply._id.toString();
+            elementReply.authorId= elementReply.authorId.toString();
+            return elementReply;
+        });
+        return element;
+    });
     return discussion;
 };
 
@@ -172,8 +188,9 @@ const update = async (
         content: content, 
         image: discussion.image, 
         url: url,
+        timestamp: discussion.timestamp,
         likes: discussion.likes,
-        replies: discussion.replies
+        comments: discussion.comments
     }; 
 
     const discussionCollection = await discussions();
