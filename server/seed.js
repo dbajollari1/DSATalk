@@ -34,15 +34,15 @@ let user2 = await users.createUser("Ryan Bajollari", "ryan123", "Pryan@1234");
 console.log(user1);
 console.log(user2);
 
-let discussion1 = await discussions.create("Test Discussion", user1._id,user1.username,"This is a test discussion. Hello! What are some of the hardest problems on leetcode?", "", "https://leetcode.com/problems/maximum-subarray/");
+let discussion1 = await discussions.create("Test Discussion", user1._id,user1.username,"This is a test discussion. Hello! What are some of the hardest problems on leetcode?",["Medium", "Dynamic"],"", "https://leetcode.com/problems/maximum-subarray/");
 console.log(discussion1)
-let discussion2 = await discussions.create("Test Discussion 2", user1._id,user1.username,"This is a test discussion 2. Greetings! I have a lot of trouble with binary tree questions, what about you guys?", "", "https://leetcode.com/problems/binary-tree-level-order-traversal/");
+let discussion2 = await discussions.create("Test Discussion 2", user1._id,user1.username,"This is a test discussion 2. Greetings! I have a lot of trouble with binary tree questions, what about you guys?","", "", "https://leetcode.com/problems/binary-tree-level-order-traversal/");
 console.log(discussion2)
 
 
-let discussion3 = await discussions.create("Test Discussion 3", user2._id,user2.username,"This is a test discussion 3. How is everyone doing? I am excited to learn more about DSA, let's go!", "", "");
+let discussion3 = await discussions.create("Test Discussion 3", user2._id,user2.username,"This is a test discussion 3. How is everyone doing? I am excited to learn more about DSA, let's go!","", "", "");
 console.log(discussion3)
-let discussion4 = await discussions.create("Test Discussion 4", user2._id,user2.username,"This is a test discussion 4. Hi everyone! What is everyone's favorite leetcode question?", "", "https://leetcode.com/problems/number-of-islands/");
+let discussion4 = await discussions.create("Test Discussion 4", user2._id,user2.username,"This is a test discussion 4. Hi everyone! What is everyone's favorite leetcode question?",["hard","graphs"], "", "https://leetcode.com/problems/number-of-islands/");
 console.log(discussion4)
 
 
@@ -65,6 +65,15 @@ let getDiscussion1 = await discussions.get(discussion1._id);
 console.log(getDiscussion1)
 let getDiscussion2 = await discussions.get(discussion2._id); 
 console.log(getDiscussion2)
+
+
+
+
+
+let getAgainDiscussion1 = await discussions.get(discussion1._id); 
+console.log(getAgainDiscussion1)
+let getAgainDiscussion2 = await discussions.get(discussion2._id); 
+console.log(getAgainDiscussion2)
 
 await closeConnection();
 

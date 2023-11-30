@@ -4,12 +4,13 @@ import { users } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 
 
-/* will change currently same code as lab 1, will use as a shell */
+
 const create = async (
     title,
     userId,
     username,
     content,
+    tags,
     image,
     url
 ) => {
@@ -17,6 +18,11 @@ const create = async (
     userId = helpers.checkId(userId,"User ID");
     username = helpers.validateUsername(username);
     content = helpers.checkContent(content);
+    if(tags) { 
+        tags = helpers.checkTags(tags); 
+    } else { 
+        tags = [];
+    }
     if(image) { 
         image = "" //will change later
     } else { 
@@ -46,6 +52,7 @@ const create = async (
         title: title, 
         user: user, 
         content: content, 
+        tags: tags,
         image: "", 
         url: url,
         timestamp: timestamp,
@@ -93,6 +100,7 @@ const get = async (id) => {
     const discussion = await discussionCollection.findOne({ _id: new ObjectId(id) });
     if (discussion === null) throw "Error: No discussion found with that ID";
     discussion._id = discussion._id.toString();
+    discussion.user._id = discussion.user._id.toString();
     discussion.comments = discussion.comments.map((element) => {
         element._id = element._id.toString();
         element.authorId= element.authorId.toString();
@@ -129,6 +137,7 @@ const update = async (
     userId,
     username,
     content,
+    tags,
     image,
     url
 ) => {
@@ -165,6 +174,12 @@ const update = async (
     } else { 
         content = discussion.content;
     }
+    
+    if(tags != null) { 
+        tags = helpers.checkTags(tags); 
+    } else { 
+        tags = discussion.tags;
+    } 
 
     if (url !== null) { 
         url = helpers.checkURL(url); 
@@ -186,6 +201,7 @@ const update = async (
         title: title, 
         user: discussion.user, 
         content: content, 
+        tags: tags,
         image: discussion.image, 
         url: url,
         timestamp: discussion.timestamp,
