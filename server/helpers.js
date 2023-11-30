@@ -134,3 +134,19 @@ export const validateName = (name) => {
       throw "Error: invalid url!"
     }
   };
+
+
+  export const checkTags = (tags) =>  { 
+    if(!tags) throw "Error: You must supply a tags array!"; 
+    if(!Array.isArray(tags)) throw "Error: tags must be an array!"; 
+    if (tags.length < 1) throw "Error: tags array must contain at least one element!";
+    for(let i = 0; i < tags.length; i++) { 
+      if (typeof tags[i] !== 'string') throw "Error: Tags array can only contain strings!";
+      tags[i] = tags[i].trim();
+      if (tags[i].length === 0)
+        throw "Error: Tags array cannot contain empty strings!"
+      if (!isNaN(tags[i]))
+        throw "Error: Tags array has a value that only contains digits";
+    }
+    return tags;
+  }
