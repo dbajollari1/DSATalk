@@ -104,3 +104,8 @@
 	height: auto;
 	padding: 20px;
   }
+
+  .question {
+	display: flex; /* Use flexbox to make children elements inline */
+	align-items: center; /* Align items vertically in the center */
+  }
