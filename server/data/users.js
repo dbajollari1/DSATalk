@@ -65,5 +65,42 @@ const checkUser = async (username, password) => {
   return returnObj;
 };
 
+const findUserByEmail = async(email) =>{
+  if(!email){
+    throw "Please provide an email" 
+  }
 
-export default {createUser,checkUser}; 
+  const userCollection = await users();
+  const user = await userCollection.findOne({ email: email });
+  if(!user) throw "Error: Either the user does not exist";
+
+  return user;
+}
+
+const findUserById = async(id) =>{
+  if(!id){
+    throw "Please provide an id" 
+  }
+
+  const userCollection = await users();
+  const user = await userCollection.findOne({ '_id': new ObjectId(id) });
+  if(!user) throw "Error: Either the user does not exist";
+
+  return user;
+}
+const updateUserProbelms = async(id,questions) => {
+  if (id === undefined) throw 'No id provided';
+  if (!questions) throw 'No questions provided';
+  const userCollection = await users();
+  // we use $set to update only the fields specified
+  await userCollection.updateOne(
+    {_id: new ObjectId(id)},
+    {$set: {'problems': questions}}
+  );
+
+  const updatedUser = await findUserById(id);
+  return updatedUser;
+}
+
+
+export default {createUser,checkUser,findUserByEmail,updateUserProbelms,findUserById}; 
