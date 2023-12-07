@@ -1,10 +1,9 @@
-
 import { Router } from 'express';
 const router = Router();
 import { userData } from "../data/index.js";
 import * as helpers from "../helpers.js";
 
-/* will change currently same code as lab 1, will use as a shell */
+
 router
   .route('/signup')
   .post(
@@ -18,14 +17,14 @@ router
     const signupInfo = req.body;
     try {
       if (!signupInfo || Object.keys(signupInfo).length === 0) throw 'There are no fields in the request body'; 
-      if (!signupInfo.name || !signupInfo.username || !signupInfo.password) throw 'Not all neccessary fields provided in request body';
+      if (!signupInfo.firstName || !signupInfo.lastName ||!signupInfo.username || !signupInfo.password) throw 'Not all neccessary fields provided in request body';
       
       signupInfo.name = helpers.validateName(signupInfo.name);
       signupInfo.username = helpers.validateUsername(signupInfo.username);
       signupInfo.password = helpers.validatePassword(signupInfo.password);
 
-      //here we will use the firebase auth to create a user
       const createdUser = await userData.createUser(signupInfo.name, signupInfo.username, signupInfo.password);
+      req.session.user = createdUser;
       res.status(200).json(createdUser);
     } catch (e) {
       return res.status(400).json({"error": e});
