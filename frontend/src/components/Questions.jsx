@@ -4,8 +4,9 @@ import viteLogo from '/vite.svg'
 import {AuthContext} from '../context/AuthContext';
 import '../App.css'
 
-import allQuestions from "../../../server/data/questionsList.js";
+import allQuestions from "../assets/questionsList.js";
 import axios from 'axios';
+
 function Questions() {
     const [checkedItems, setCheckedItems] = useState({});
     const {currentUser} = useContext(AuthContext);

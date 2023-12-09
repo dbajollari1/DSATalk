@@ -11,9 +11,9 @@ router
   .get(
     async (req, res) => {
       try {
-        if (!req.session.user) {
-          return res.status(401.).json({ error: "You must be logged in to look at the discussions" });
-        }
+        // if (!req.session.user) {
+        //   return res.status(401.).json({ error: "You must be logged in to look at the discussions" });
+        // }
         const discussions = await discussionData.getAll();
         return res.json(discussions);
       } catch (e) {
