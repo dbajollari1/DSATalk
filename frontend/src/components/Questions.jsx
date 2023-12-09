@@ -3,9 +3,9 @@ import { useState } from 'react'
 import viteLogo from '/vite.svg'
 import '../App.css'
 
-import allQuestions from "../../../server/data/questionsList.js";
-function Questions() {
+import allQuestions from "../assets/questionsList.js";
 
+function Questions() {
   return (
     <div>
     {allQuestions.map((question, index) => (

@@ -1,9 +1,14 @@
 import express from 'express';
 const app = express();
+import cors from 'cors';
 import session from 'express-session';
 import configRoutes from './routes/index.js';
 
 app.use(express.json());
+
+app.use(cors({
+  origin: '*'
+}));
 
 app.use(
   session({

@@ -11,7 +11,7 @@ router
     async (req, res) => {
       try {
         //assumnig we have a function to get all discussions
-        const discussions = await discussionData.getAll();
+        const discussions = await discussionData.getAll(1);
         return res.json(discussions);
       } catch (e) {
         return res.status(500).json({ error: e });
