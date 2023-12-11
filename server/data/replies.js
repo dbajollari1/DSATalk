@@ -149,7 +149,8 @@ const remove = async (discussionId, commentId, replyId) => {
         throw 'Error: could not update discussion successfully!';
     }
 
-    return updatedInfoDiscussion.value;
+    const updatedDiscussion = await discussionCollection.find({_id: new ObjectId(discussionId)});
+    return updatedDiscussion;
 }
 
 
