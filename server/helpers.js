@@ -82,14 +82,16 @@ export const validateName = (name) => {
 
 
 
-  export const checkPageNum = (pageNum) => { 
-    if(typeof pageNum  !== 'number') throw 'Error:  Page number must be a number.';
-    if (pageNum < 1) throw 'Error: Page number must be a number greater than 1.'
-    if(!pageNum) throw "Error: Page number must be provided.";
-    if (Number.isInteger(pageNum) === false) throw "Error: Page number must be a whole number integer.";
-    return pageNum; 
+  export const checkPageNum = (pageNum) => {
+    if (!pageNum) throw `Error: You must provide a page number!`;
+    if (typeof (Number(pageNum)) !== 'number') throw `Error:page num must be a valid number!`;
+    pageNum = pageNum.trim();
+    if (pageNum <= 0)
+      throw `Error: page num cannot be less than or equal to zero!`;
+    if(!Number.isInteger(Number(pageNum))) 
+      throw "Error: page num must an integer!"
+    return pageNum;
   }
-
 
 
   export const checkTitle = (title) => {
@@ -150,3 +152,5 @@ export const validateName = (name) => {
     }
     return tags;
   }
+
+
