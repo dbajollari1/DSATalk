@@ -11,7 +11,7 @@ const createUser = async (
   username,
   password,
 ) => {
-  if(!name || !username || ! password) throw "Error: Not all neccessary fields passed to function!";
+  if(!name || !username || !password) throw "Error: Not all neccessary fields passed to function!";
 
   name = helpers.validateName(name); 
   username = helpers.validateUsername(username);

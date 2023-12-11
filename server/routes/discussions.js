@@ -2,6 +2,8 @@ import { Router } from 'express';
 const router = Router();
 import { discussionData, userData } from '../data/index.js';
 import * as helpers from "../helpers.js";
+import { ObjectId } from 'mongodb';
+import { users } from '../config/mongoCollections.js';
 
 
 
@@ -21,48 +23,45 @@ router
       }
     })
   .post(
-    (req, res, next) => {
-      if (!req.session.user) {
-        return res.status(401.).json({ error: "You must be logged in to look at the discussions" });
-      }
-      next();
-    },
+    // (req, res, next) => {
+    //   if (!req.session.user) {
+    //     return res.status(401.).json({ error: "You must be logged in to look at the discussions" });
+    //   }
+    //   next();
+    // },
     async (req, res) => {
       //code here for POST
       const discussionInfo = req.body;  
       try {
-        discussionInfo.title = helpers.validateTitle(discussionInfo.title);
-        discussionInfo.content = helpers.validateContent(discussionInfo.content);
-        discussionInfo.userId = helpers.checkId(discussionInfo.userId, "User Id");
-        discussionInfo.username = helpers.validateUsername(discussionInfo.username);
-        //need to make check image function when s3 bucket is done
-        if(discussionInfo.image) {
-          
-          discussionInfo.image = "";
+        let title = discussionInfo.title;
+        let content = discussionInfo.content;
+        let userId = discussionInfo.userId;
+        let username = discussionInfo.username;
+        let tags = discussionInfo.tags;
+        let image = discussionInfo.image;
+        let url = discussionInfo.url;
+        if (!title || !content || !userId || !username) throw 'Not all neccessary fields provided in request body';
+        
+        title = helpers.checkTitle(title);
+        content = helpers.checkContent(content);
+        userId = helpers.checkId(userId, "User ID");
+        username = helpers.validateUsername(username);
+        if (tags) {
+          tags = helpers.checkTags(tags);
+        } else {
+          tags = [];
         }
-        else{
-          discussionInfo.image = "";
+        if (image) {
+          image = "" //will change later
+        } else {
+          image = ""
         }
-        if(discussionInfo.url) {
-          discussionInfo.url = helpers.checkURL(discussionInfo.url);
+        if (url) {
+          url = helpers.checkURL(url);
+        } else {
+          url = ""
         }
-        else{
-          discussionInfo.url = "";
-        }
-        if(discussionInfo.tags) {
-          discussionInfo.tags = helpers.checkTags(discussionInfo.tags);
-        }
-        else{
-          discussionInfo.tags = [];
-        }
-        const userCollection = await users();
-        const userCheck1 = await userCollection.findOne({ username: username });
-        if (!userCheck1) throw "Error: Cannot find user with that username!";
-        const userCheck2 = await userCollection.findOne({ _id: new ObjectId(userId) });
-        if (!userCheck2) throw "Error: Cannot find user with that id!";
-
-       
-
+        
 
         const createdDiscussion = await discussionData.create(discussionInfo.title, discussionInfo.userId, discussionInfo.username, discussionInfo.content,  discussionInfo.tags, discussionInfo.image, discussionInfo.url);
         return res.status(200).json(createdDiscussion);

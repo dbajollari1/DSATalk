@@ -63,7 +63,8 @@ const create = async (
     const discussionCollection = await discussions();
     const insertInfo = await discussionCollection.insertOne(newDiscussion);
     if (!insertInfo.acknowledged || !insertInfo.insertedId) throw 'Error: Could not add new discussion!';
-  
+    
+    console.log("insertInfo = ",insertInfo)
     const newId = insertInfo.insertedId.toString();
   
     const discussion = await get(newId);
