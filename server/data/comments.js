@@ -10,7 +10,7 @@ const create = async (
     content) => {
 
     discussionId = helpers.checkId(discussionId, "Discussion ID");
-    
+
     const discussionCollection = await discussions();
     const discussion = await discussionCollection.findOne({ _id: new ObjectId(discussionId) });
     if (discussion === null) throw "Error: No discussion found with that ID";
@@ -20,7 +20,7 @@ const create = async (
     const userCollection = await users();
     const user = await userCollection.findOne({ _id: new ObjectId(userId) });
     if (user === null) throw "Error: No user found with that ID";
-    username = helpers.validateUsername(username); 
+    username = helpers.validateUsername(username);
     const usernameCheck = await userCollection.findOne({ username: username });
     if (usernameCheck === null) throw "Error: No user found with that username";
 
@@ -56,74 +56,77 @@ const create = async (
     return newComment;
 }
 
-const getAll = async ( 
-    discussionId 
-) => { 
+const getAll = async (
+    discussionId
+) => {
     discussionId = helpers.checkId(discussionId, "Discussion ID");
-    
+
     const discussionCollection = await discussions();
     const discussion = await discussionCollection.findOne({ _id: new ObjectId(discussionId) });
     if (discussion === null) throw "Error: No discussion found with that ID";
 
-    let comments = discussion.comments; 
+    let comments = discussion.comments;
     comments = comments.map((element) => {
         element._id = element._id.toString();
         return element;
     });
 
-    for(let i = 0; i < comments.length; i++) { 
-        for(let j = 0; j < comments[i].replies.length; j++){ 
+    for (let i = 0; i < comments.length; i++) {
+        for (let j = 0; j < comments[i].replies.length; j++) {
             comments[i].replies[j]._id = comments[i].replies[j]._id.toString();
         }
     }
-    return comments; 
+    return comments;
 }
 
 
-const get = async ( 
+const get = async (
     commentId
-) => { 
-    commentId = helpers.checkId(commentId,"Comment ID");
+) => {
+    commentId = helpers.checkId(commentId, "Comment ID");
     const discussionCollection = await discussions();
-    
+
     let comments = await discussionCollection.find({ "comments": { $elemMatch: { "_id": new ObjectId(commentId) } } }).toArray();
 
-    let comment = null; 
-    for (let i = 0; i < comments.length; i++ ) { 
-        if(comments[i]._id.toString() === commentId) { 
-            comments[i]._id = commens[i]._id.toString(); 
+    let comment = null;
+    for (let i = 0; i < comments.length; i++) {
+        if (comments[i]._id.toString() === commentId) {
+            comments[i]._id = commens[i]._id.toString();
             comment = comments[i]._id;
         }
     }
-    if(comment === null) { 
-        throw "Error: No comment found with that ID!"; 
+    if (comment === null) {
+        throw "Error: No comment found with that ID!";
     }
-    for(let j = 0; j < comment.replies.length; j++){ 
+    for (let j = 0; j < comment.replies.length; j++) {
         comment.replies[j]._id = comments.replies[j]._id.toString();
     }
-    return comment; 
+    return comment;
 }
 
-const remove = async (commentId) => {
-    commentId = helpers.checkId(commentId); 
+const remove = async (discussionId,commentId) => {
+    discussionId = helpers.checkId(discussionId, "Dicussion ID");
+    commentId = helpers.checkId(commentId, "Comment ID");
 
     const discussionCollection = await discussions();
-    let discussionId = await discussionCollection.find({ "comments" : {$elemMatch: { "_id": new ObjectId(commentId)}}}).toArray();
-    if (discussionId === null) throw "Error: No discussion found with that comment ID";
-    discussionId = discussionId[0]._id.toString(); 
+    const thisDicussion = await discussionCollection.find({_id: new ObjectId(discussionId)});
+    if (thisDicussion === null) throw "Error: No discussion found with that ID found!";
+    let checkComment = await discussionCollection.find({ "comments": { $elemMatch: { "_id": new ObjectId(commentId) } } }).toArray();
+    if (checkComment === null) throw "Error: No commment with that ID found!";
+    discussionId = discussionId[0]._id.toString();
 
 
 
     const updatedInfoDiscussion = await discussionCollection.findOneAndUpdate(
-        {_id: new ObjectId(discussionId)},
-        {$pull: {comments: {_id: new ObjectId(commentId)}}}, 
-        {returnDocument: 'after'}
-      );
-      if (updatedInfoTicket.lastErrorObject.n === 0) {
+        { _id: new ObjectId(discussionId) },
+        { $pull: { comments: { _id: new ObjectId(commentId) } } },
+        { returnDocument: 'after' }
+    );
+    if (updatedInfoTicket.lastErrorObject.n === 0) {
         throw "Error: could not update discussion successfully!";
-      }
-
-      return updatedInfoDiscussion.value;
+    }
+    const updatedDiscussion = await discussionCollection.find({_id: new ObjectId(discussionId)});
+    return updatedDiscussion;
 }
 
 
