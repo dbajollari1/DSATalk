@@ -108,4 +108,19 @@ router
             }
         });
 
+router        
+.route('/addUser')
+.post(
+    async (req, res) => {
+        try {
+            console.log("route hit")
+            const user = await userData.createUserSignOn(req.body.email,req.body.username);
+            console.log("user = ",user)
+            return res.json(user);
+        } catch (e) {
+            return res.status(500).json({ error: e });
+        }
+    });
+        
+
 export default router;
