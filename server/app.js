@@ -3,10 +3,18 @@ const app = express();
 import session from 'express-session';
 import configRoutes from './routes/index.js';
 import cors from 'cors';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 import { createClient } from 'redis';
-const client = createClient();
 
+const client = createClient({url: 'redis://' + process.env.REDIS_HOST + ":" + process.env.REDIS_PORT});
+// const client = createClient({
+//   socket: {
+//      port: process.env.REDIS_PORT,
+//      host: '172.18.0.2'
+//     }
+// });
 client.connect().then(() => {});
 
 app.use(express.json());
