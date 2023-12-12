@@ -34,9 +34,10 @@ async function doSignInWithEmailAndPassword(email, password) {
 }
 
 async function doSocialSignIn() {
-  let auth = getAuth();
-  let socialProvider = new GoogleAuthProvider();
-  await signInWithPopup(auth, socialProvider);
+  const auth = getAuth();
+  const socialProvider = new GoogleAuthProvider();
+  socialProvider.setCustomParameters({ prompt: 'select_account' });
+  return await signInWithPopup(auth, socialProvider);
 }
 
 async function doPasswordReset(email) {
@@ -44,9 +45,16 @@ async function doPasswordReset(email) {
   await sendPasswordResetEmail(auth, email);
 }
 
-async function doSignOut() {
-  let auth = getAuth();
-  await signOut(auth);
+async function doSignOut(navigate) {
+  try{
+    let auth = getAuth();
+    await auth.signOut();
+    navigate("/");
+    window.location.reload();
+
+  }catch(error){
+    console.error('Error during sign-out:', error);
+  }
 }
 
 export {
