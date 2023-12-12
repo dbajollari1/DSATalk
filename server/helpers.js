@@ -153,4 +153,31 @@ export const validateName = (name) => {
     return tags;
   }
 
+//https://stackoverflow.com/questions/20588026/validating-email-address-using-jscript-without-a-regular-expression
+  export const validateEmail = (email) => {
+
+    if (value.indexOf('@') == -1) {
+        throw "Error: Email must contain an @ symbol!";
+    } else {
+
+        let parts = value.split('@');
+        let domain = parts[1];
+
+        if (domain.indexOf('.') == -1) {
+            throw "Error: Email must contain a . symbol!";
+        } else {
+
+            var domainParts = domain.split('.');
+            var ext = domainParts[1];
+
+            if (ext.length > 4 || ext.length < 2) {
+              throw "Error: Email must contain a valid domain extension!";
+            }
+        }
+
+    }
+    
+    return email;
+  }
+
 

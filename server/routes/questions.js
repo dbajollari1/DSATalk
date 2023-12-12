@@ -1,7 +1,10 @@
 import { Router } from 'express';
 import { questionData } from '../data/index.js';
 import * as helpers from "../helpers.js";
+import redis from 'redis';
 const router = Router();
+const client = redis.createClient();
+client.connect().then(() => { });
 
 
 
@@ -29,7 +32,15 @@ router
     .get(
         async (req, res) => {
             try {
+                let exists = await client.exists("questions");
+                if (exists) {
+                    let problems = await client.get("questions");
+                    problems = JSON.parse(problems);
+                    return res.json(problems);
+                }
                 const problems = await questionData.getAllQuestions();
+                const flatResult = JSON.stringify(problems);
+                let set = await client.set("questions", flatResult);
                 return res.json(problems);
             } catch (e) {
                 return res.status(500).json({ error: e });
