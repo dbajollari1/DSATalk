@@ -10,7 +10,6 @@ router
             try {
                 let name = req.body.name;
                 let username = req.body.username;
-                console.log("name = ",name)
                 if (!name || !username) throw 'You must provide a name and username';
                 name = name.trim();
                 username = username.trim();
