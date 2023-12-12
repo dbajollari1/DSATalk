@@ -102,5 +102,39 @@ const updateUserProbelms = async(id,questions) => {
   return updatedUser;
 }
 
+const createUserSignOn = async (
+  email,
+  username
+) => {
+  if(!email || !username) throw "Error: Not all neccessary fields passed to function!";
 
-export default {createUser,checkUser,findUserByEmail,updateUserProbelms,findUserById}; 
+  
+  const userCollection = await users();
+  const user = await userCollection.findOne({ email: email });
+  if(user) throw "Error: User already exists with that username!"; 
+
+  
+  let newUser = {
+    email: email,
+    username: username,
+    problems : []
+  
+  };
+
+  const insertInfo = await userCollection.insertOne(newUser);
+  if (!insertInfo.acknowledged || !insertInfo.insertedId) throw 'Error: Could not add new user!';
+
+  const updatedUserCollection = await users();
+  let createdUser = await updatedUserCollection.findOne({ _id: new ObjectId(insertInfo.insertedId.toString()) });
+  if (!createdUser) throw 'Error: Could not create user!';
+
+  let returnObj = {
+    "_id": createdUser._id.toString(), 
+    "email": createdUser.email,
+    "username": createdUser.username
+  }
+
+  return returnObj;
+};
+
+export default {createUser,checkUser,findUserByEmail,updateUserProbelms,findUserById,createUserSignOn}; 
