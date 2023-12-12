@@ -9,6 +9,7 @@ import SignIn from './SignIn';
 import SignUp from './SignUp';
 import {AuthProvider} from '../context/AuthContext';
 import PrivateRoute from './PrivateRoute';
+import Discussion from './Discussion';
 function App() {
   return (
     <AuthProvider>
@@ -23,6 +24,9 @@ function App() {
           </Route>
           <Route path='/account' element={<PrivateRoute />}>
             <Route path='/account' element={<Account />} />
+          </Route>
+          <Route path='/discussions/discussion/:id' element={<PrivateRoute />}>
+            <Route path='/discussions/discussion/:id' element={<Discussion />} />
           </Route>
           <Route path='/signin' element={<SignIn />} />
           <Route path='/signup' element={<SignUp />} />
