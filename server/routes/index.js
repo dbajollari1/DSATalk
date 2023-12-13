@@ -4,6 +4,7 @@ import questionRoutes from './questions.js'
 import commentRoutes from './comments.js';
 
 
+
 const constructorMethod = (app) => {
   app.use('/discussions', discussionRoutes);
   app.use('/comments', commentRoutes);

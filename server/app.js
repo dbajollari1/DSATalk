@@ -3,6 +3,8 @@ const app = express();
 import session from 'express-session';
 import configRoutes from './routes/index.js';
 import cors from 'cors';
+import admin from 'firebase-admin';
+import serviceAccount from './serviceAccountKey.json' assert { type: "json" }; // Make sure to replace with your actual service account key
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -17,19 +19,32 @@ const client = createClient({url: 'redis://' + process.env.REDIS_HOST + ":" + pr
 // });
 client.connect().then(() => {});
 
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://dsatalks-96fa4.firebaseio.com',
+});
+
+
 app.use(express.json());
 
 app.use(cors());
 
-app.use(
-  session({
-    name: 'AuthCookie',
-    secret: "This is a secret for the CS554 Final Project",
-    saveUninitialized: false,
-    resave: false
-  })
-);
+// Middleware to verify Firebase ID token
+export const verifyToken = async (req, res, next) => {
+  const idToken = req.headers.authorization?.split('Bearer ')[1];
+  
+  try {
+    if (idToken === undefined) throw "Error: Null auth cookie"
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    req.user = decodedToken;
+    next();
+  } catch (error) {
+    console.error('Error verifying token:', error);
+    res.status(401).json({ error: 'Unauthorized' });
+  }
+};
 
+app.use('/',verifyToken);
 
 // const pathsAccessed = {};
 

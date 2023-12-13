@@ -1,15 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext} from 'react';
 import axios from 'axios';
+import {AuthContext} from '../context/AuthContext';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import '../App.css'; // Import the CSS file
 
 function DiscussionsPage() {
   const [discussions, setDiscussions] = useState([]);
-
+  const {currentUser} = useContext(AuthContext);
   useEffect(() => {
     const fetchDiscussions = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/discussions');
+        const headers = {
+          'Authorization': `Bearer ${currentUser.accessToken}`, 
+          'Content-Type': 'application/json',
+        };
+        const response = await axios.get('http://localhost:3000/discussions',{headers});
         setDiscussions(response.data);
       } catch (error) {
         console.error('Error fetching discussion data', error);
