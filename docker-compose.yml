@@ -1,0 +1,31 @@
+version: '3.9'
+services:
+  my-redis-service:
+    image: 'redis:alpine'
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+    command: ["redis-server"]
+    ports:
+      - '6379:6379'
+  
+  my-server-service:
+    depends_on:
+      my-redis-service:
+        condition: service_healthy
+    restart: on-failure
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+  
+  my-frontend-service:
+    restart: on-failure
+    build: ./frontend
+    ports:
+      - '5173:5173'
+    depends_on:
+      - my-server-service

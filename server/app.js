@@ -1,23 +1,24 @@
 import express from 'express';
 const app = express();
-import session from 'express-session';
 import configRoutes from './routes/index.js';
 import cors from 'cors';
 import admin from 'firebase-admin';
-import serviceAccount from './serviceAccountKey.json' assert { type: "json" }; // Make sure to replace with your actual service account key
+import serviceAccount from './serviceAccountKey.js'; // Make sure to replace with your actual service account key
 import * as dotenv from 'dotenv';
 dotenv.config();
 
 import { createClient } from 'redis';
+console.log(process.env.REDIS_HOST)
 
-const client = createClient({url: 'redis://' + process.env.REDIS_HOST + ":" + process.env.REDIS_PORT});
+const redisClient = createClient({url: 'redis://' + process.env.REDIS_HOST + ":" + process.env.REDIS_PORT});
+
 // const client = createClient({
 //   socket: {
 //      port: process.env.REDIS_PORT,
 //      host: '172.18.0.2'
 //     }
 // });
-client.connect().then(() => {});
+redisClient.connect().then(() => {});
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
