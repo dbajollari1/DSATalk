@@ -21,7 +21,7 @@ client.connect().then(() => {});
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://dsatalks-96fa4.firebaseio.com',
+  databaseURL: 'https://dsatalks-b8533.firebaseio.com',
 });
 
 
