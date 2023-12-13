@@ -10,6 +10,7 @@ import SignUp from './SignUp';
 import {AuthProvider} from '../context/AuthContext';
 import PrivateRoute from './PrivateRoute';
 import Discussion from './Discussion';
+import DiscussionsPage from './DiscussionsPage';
 function App() {
   return (
     <AuthProvider>
@@ -19,6 +20,7 @@ function App() {
         </header>
         <Routes>
           <Route path='/' element={<Landing />} />
+          <Route path='/discussions' element={<DiscussionsPage />} />
           <Route path='/home' element={<PrivateRoute />}>
             <Route path='/home' element={<Home />} />
           </Route>
