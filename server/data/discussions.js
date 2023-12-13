@@ -274,4 +274,17 @@ const addLike = async (
     return updatedDiscussion; 
 }  
 
-export default {create, getAll, get, remove, update, addLike}; 
+const getAllDiscussions = async () => {
+    const discussionCollection = await discussions();
+    let discussionList = await discussionCollection.find({}).toArray();
+    if (!discussionList) throw 'Error: Could not get all discussion!';
+    
+    discussionList = discussionList.map((element) => {
+        element._id = element._id.toString();
+        element.user._id = element.user._id.toString();
+        return element;
+    });
+    return discussionList;
+}
+
+export default {create, getAll, get, remove, update, addLike, getAllDiscussions}; 
