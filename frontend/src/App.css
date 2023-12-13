@@ -109,3 +109,38 @@
 	display: flex; /* Use flexbox to make children elements inline */
 	align-items: center; /* Align items vertically in the center */
   }
+
+
+  .discussion-container {
+	border: 1px solid #ccc;
+	padding: 10px;
+	margin-bottom: 10px;
+  }
+  
+  .title-container {
+	margin-bottom: 10px;
+  }
+  
+  .discussion-title {
+	margin: 0;
+  }
+  
+  .author {
+	margin: 0;
+  }
+  
+  .likes {
+	align-self: flex-end;
+  }
+  
+  .content-textarea {
+	width: 100%;
+	margin: 10px 0;
+	display: none;
+  }
+  
+
+.discussion-link {
+	text-decoration: none; /* Remove underline */
+	color: inherit; /* Use the default text color */
+  }

@@ -184,6 +184,18 @@ router
         return res.status(400).json({ error: e });
       }
     })
+    .get(
+      async (req, res) => {
+          try {
+            console.log("getting all dis")
+                  let discussions = await discussionData.getAllDiscussions();
+                  return res.json(discussions);
+              }
+              
+          catch (e) {
+              return res.status(500).json({ error: e });
+          }
+      });
 
 //will need to change so can work with users firebase credentials
 router
