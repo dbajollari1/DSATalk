@@ -10,12 +10,12 @@ export default {
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 */
-const VITE_FIREBASE_KEY =  "AIzaSyD9S0JhEl_6LGlDHEO6M7I3vNhWxdYCtqg"
-const VITE_FIREBASE_DOMAIN= "dsatalks-96fa4.firebaseapp.com"
-const VITE_FIREBASE_PROJECT_ID = "dsatalks-96fa4"  
-const VITE_FIREBASE_STORAGE_BUCKET ="dsatalks-96fa4.appspot.com"
-const VITE_FIREBASE_SENDER_ID =  "331292838257"
-const VITE_FIREBASE_APP_ID = "1:331292838257:web:6d52eec1de40f2ad638ed0"
+const VITE_FIREBASE_KEY =  "AIzaSyBcC0IT-PPxmTKqzSAPlx7Zx_O0OUqUeKs"
+const VITE_FIREBASE_DOMAIN= "dsatalks-b8533.firebaseapp.com"
+const VITE_FIREBASE_PROJECT_ID = "dsatalks-b8533"  
+const VITE_FIREBASE_STORAGE_BUCKET ="dsatalks-b8533.appspot.com"
+const VITE_FIREBASE_SENDER_ID =  "805013414416"
+const VITE_FIREBASE_APP_ID = "1:805013414416:web:2ca5586ce81aa4efe6a095"
 export default {
   apiKey: VITE_FIREBASE_KEY,
   authDomain: VITE_FIREBASE_DOMAIN,
