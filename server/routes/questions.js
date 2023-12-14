@@ -1,10 +1,16 @@
 import { Router } from 'express';
 import { questionData } from '../data/index.js';
 import * as helpers from "../helpers.js";
-import redis from 'redis';
 const router = Router();
-const client = redis.createClient();
-client.connect().then(() => { });
+import * as dotenv from 'dotenv';
+dotenv.config();
+
+import { createClient } from 'redis';
+console.log(process.env.REDIS_HOST)
+
+const redisClient = createClient({url: 'redis://' + process.env.REDIS_HOST + ":" + process.env.REDIS_PORT});
+redisClient.connect().then(() => {});
+
 
 
 

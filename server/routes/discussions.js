@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { createClient } from 'redis';
 const router = Router();
 import { discussionData, userData } from '../data/index.js';
 import * as helpers from "../helpers.js";
@@ -8,9 +7,12 @@ import { users } from '../config/mongoCollections.js';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-//const client = redis.createClient({url: 'redis://' + process.env.REDIS_HOST + ":" + process.env.REDIS_PORT});
-const client = createClient({socket: {port:process.env.REDIS_PORT, host:process.env.REDIS_HOST}});
-client.connect().then(() => { });
+import { createClient } from 'redis';
+console.log(process.env.REDIS_HOST)
+
+const redisClient = createClient({url: 'redis://' + process.env.REDIS_HOST + ":" + process.env.REDIS_PORT});
+redisClient.connect().then(() => {});
+
 
 router
   .route('/:pagenum')
