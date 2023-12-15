@@ -71,10 +71,10 @@ router
       }
       const discussionId = req.params.id;
       let searchKey = "discussion: " + discussionId;
-      let exists = await client.exists(searchKey);
+      let exists = await redisClient.exists(searchKey);
       if (exists) {
         console.log('Results  in cache');
-        const searchResults = await client.get(searchKey);
+        const searchResults = await redisClient.get(searchKey);
         //const searchResultsJSON = unflatten(searchResults);
         const searchResultsJSON = JSON.parse(searchResults)
         return res.status(200).json(searchResultsJSON)
