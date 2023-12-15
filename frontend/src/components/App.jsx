@@ -27,8 +27,8 @@ function App() {
           <Route path='/account' element={<PrivateRoute />}>
             <Route path='/account' element={<Account />} />
           </Route>
-          <Route path='/discussions/discussion/:id' element={<PrivateRoute />}>
-            <Route path='/discussions/discussion/:id' element={<Discussion />} />
+          <Route path='/discussion/:id' element={<PrivateRoute />}>
+            <Route path='/discussion/:id' element={<Discussion />} />
           </Route>
           <Route path='/signin' element={<SignIn />} />
           <Route path='/signup' element={<SignUp />} />
