@@ -3,8 +3,11 @@ import axios from 'axios';
 import {AuthContext} from '../context/AuthContext';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import '../App.css'; // Import the CSS file
-
+import AddDiscussionDialog from './AddDiscussionDialog';
 function DiscussionsPage() {
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
   const [discussions, setDiscussions] = useState([]);
   const {currentUser} = useContext(AuthContext);
   useEffect(() => {
@@ -24,10 +27,22 @@ function DiscussionsPage() {
     fetchDiscussions();
   }, []);
 
+  const closeAddFormState = () => {
+    setShowAddForm(false);
+  };
   return (
     <div>
       <h1>Welcome to the Discussions page!</h1>
-
+      <button onClick={() => setShowAddForm(!showAddForm)}>Create Discussion</button>
+      <br/>
+      <br/>
+      {showAddForm && (
+          <AddDiscussionDialog
+            open={showAddForm}
+            handleClose={() => setShowAddForm(!showAddForm)}
+            closeAddFormState={closeAddFormState}
+          />
+        )}
       <div>
         {discussions.map((discussion) => (
           // Wrap the discussion content with a Link component

@@ -87,8 +87,7 @@ router
         async (req, res) => {
             try {
                 let email = req.params.id;
-                email = helpers.validateEmail(email);
-
+                //email = helpers.validateEmail(email);
                 const user = await userData.findUserByEmail(email);
                 return res.json(user);
             } catch (e) {
