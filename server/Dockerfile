@@ -19,7 +19,10 @@ ENV TOKEN_URI="https://oauth2.googleapis.com/token"
 ENV AUTH_PROVIDER_X509_CERT_URL="https://www.googleapis.com/oauth2/v1/certs"
 ENV CLIENT_X509_CERT_URL="https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-7m4hk%40dsatalks-b8533.iam.gserviceaccount.com"
 ENV UNIVERSE_DOMAIN="googleapis.com"
-
+ENV ACCESS_KEY="AKIA23ETLKVFJPZKGZ5G"
+ENV SECRET_ACCESS_KEY="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"
+ENV AWS_BUCKET_NAME="dsatalksaws"
+ENV AWS_REGION="us-east-1"
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied

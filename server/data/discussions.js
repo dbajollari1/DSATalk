@@ -14,15 +14,15 @@ const create = async (
     image,
     url
 ) => {
-    //title = helpers.checkTitle(title); 
+    title = helpers.checkTitle(title); 
     //userId = helpers.checkId(userId,"User ID");
     //username = helpers.validateUsername(username);
-    //content = helpers.checkContent(content);
-    //if(tags) { 
-      //  tags = helpers.checkTags(tags); 
-    //} else { 
+    content = helpers.checkContent(content);
+    if(tags) { 
+       tags = helpers.checkTags(tags); 
+    } else { 
         tags = [];
-    //}
+    }
     if(image) { 
         image = "" //will change later
     } else { 

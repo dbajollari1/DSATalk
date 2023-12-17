@@ -28,7 +28,6 @@ export const verifyToken = async (req, res, next) => {
   const idToken = req.headers.authorization?.split('Bearer ')[1];
   
   try {
-    if (idToken === undefined) throw "Error: Null auth cookie"
     const decodedToken = await admin.auth().verifyIdToken(idToken);
     req.user = decodedToken;
     next();
