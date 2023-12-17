@@ -221,12 +221,13 @@ router
 
         title = helpers.checkTitle(title);
         content = helpers.checkContent(content);
-        //userId = helpers.checkId(userId, "User ID");
+
+        userId = helpers.checkId(userId, "User ID");
         //username = helpers.validateUsername(username);
         if (tags) {
-          tags = helpers.checkTags(tags);
+        tags = helpers.checkTags(tags);
         } else {
-          tags = [];
+        tags = [];
         }
 
         if (req.file) { //image passed
@@ -247,10 +248,9 @@ router
           url = ""
         }
 
-        const createdDiscussion = await discussionData.create(discussionInfo.title, discussionInfo.userId, discussionInfo.username, discussionInfo.content, discussionInfo.tags, discussionInfo.image, discussionInfo.url);
 
+        const createdDiscussion = await discussionData.create(discussionInfo.title, discussionInfo.userId, discussionInfo.username, discussionInfo.content, tags, discussionInfo.image, discussionInfo.url);
         await updateAllDiscussionsRedis
-
         return res.status(200).json(createdDiscussion);
       } catch (e) {
         return res.status(400).json({ error: e });
@@ -317,6 +317,20 @@ router
         return res.status(500).json({ error: e });
       }
     });
-
-
+router.delete('/:id', async (req, res) => {
+  try {
+    console.log("Inside delete route")
+    const discussionId = req.params.id;
+    console.log(discussionId)
+    // Add your logic to check if the discussion with the given id exists
+    
+    // Assuming you have a method in your data module to delete a discussion
+    await discussionData.remove(discussionId);
+    await updateAllDiscussionsRedis;
+    return res.status(200).json({ message: 'Discussion deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting discussion', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});    
 export default router;  
