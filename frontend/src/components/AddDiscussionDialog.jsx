@@ -29,6 +29,12 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
     url: ''
   });
 
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
   const handleDiscussionCompletion = (data) => {
     setSuccessDialogOpen(true);
     alert('Discussion Added');
@@ -74,6 +80,8 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
       alert('Invalid Input');
       return;
     }
+
+
     const body = {
         title: discussionDetails.title,
         content: discussionDetails.content,
@@ -83,12 +91,16 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
         userId: curUser.data._id,
         username: curUser.data.username,
       };
+
+      const formData = new FormData();
+      formData.append('image', selectedFile);
+      formData.append('json_data',JSON.stringify(body))
     try{
-    const response = await axios.post('http://localhost:3000/discussions', body,
+    const response = await axios.post('http://localhost:3000/discussions', formData,
       {
         headers:{
             'Authorization': `Bearer ${currentUser.accessToken}`, 
-            'Content-Type': 'application/json'
+            'Content-Type': 'multipart/form-data'
         }
       }
       );
@@ -113,6 +125,10 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
   const handleValueChange = (event) => {
     setDiscussionDetails({ ...discussionDetails, [event.target.name]: event.target.value });
   };
+
+
+
+ 
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sx">
@@ -158,8 +174,15 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
           onChange={handleValueChange}
           value={discussionDetails.image}
         />
-
 <br/> 
+<input
+          accept="image/*"
+          
+          id="upload-file"
+          type="file"
+          onChange={handleFileChange}
+        />
+
         
         <TextField
           id="outlined-basic"
