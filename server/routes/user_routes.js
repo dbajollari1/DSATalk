@@ -42,16 +42,16 @@ router
             try {
                 let id = req.params.id;
                 id = helpers.checkId(id);
-                let exists = await client.exists(id);
+                let exists = await redisClient.exists(id);
                 if (exists) {
-                    let user = await client.get(id);
+                    let user = await redisClient.get(id);
                     user = JSON.parse(user);
                     return res.json(user);
                 }
 
                 const user = await userData.findUserById(id);
                 const flatResult = JSON.stringify(user);
-                let set = await client.set(id, flatResult);
+                let set = await redisClient.set(id, flatResult);
                 return res.json(user);
             } catch (e) {
                 return res.status(500).json({ error: e });

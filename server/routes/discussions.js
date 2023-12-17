@@ -25,10 +25,10 @@ router
       }
       const pagenum = req.params.pagenum;
       let searchKey = "discussion page: " + pagenum;
-      let exists = await client.exists(searchKey);
+      let exists = await redisClient.exists(searchKey);
       if (exists) {
         console.log('Results  in cache');
-        const searchResults = await client.get(searchKey);
+        const searchResults = await redisClient.get(searchKey);
         //const searchResultsJSON = unflatten(searchResults);
         const searchResultsJSON = JSON.parse(searchResults)
         return res.status(200).json(searchResultsJSON)
@@ -53,7 +53,7 @@ router
         }
         let searchKey = "discussion page: " + pagenum;
         const flatResult = JSON.stringify(discussions);
-        let setFlatResult = await client.set(searchKey, flatResult);
+        let setFlatResult = await redisClient.set(searchKey, flatResult);
         return res.json(discussions);
       } catch (e) {
         return res.status(500).json({ error: e });

@@ -1,15 +1,15 @@
 import { useState, useContext, useEffect } from 'react'
-//import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import {AuthContext} from '../context/AuthContext';
 import '../App.css'
-
+import Search from './Search';
 import allQuestions from "../assets/questionsList.js";
 import axios from 'axios';
 
 function Questions() {
     const [checkedItems, setCheckedItems] = useState({});
     const {currentUser} = useContext(AuthContext);
+    const [results, setResults] = useState([]);
 
 
     // Function to handle checkbox changes
@@ -85,6 +85,7 @@ function Questions() {
   }, [currentUser]);
 
   useEffect(() => {
+    setResults(allQuestions);
     return () => {
       // Reset the state of checkedItems when the component is unmounted
       setCheckedItems({});
@@ -100,9 +101,16 @@ function Questions() {
   }, [currentUser]); 
 
   return (
-    <div>
+    <div className='questions-container'>
+      {currentUser && (
+        <div className="search-bar-container">
+        <Search setResults={setResults} />
+        <br/>
+        </div>
+)}
         <button onClick={handleSaveButtonClick}>Save question progress</button>
-    {allQuestions.map((question, index) => (
+        <br/>
+    {results.map((question, index) => (
         <div className='question-container' key={index}>
         <input type='checkbox'
           checked={checkedItems[index] || false}
