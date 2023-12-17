@@ -4,11 +4,11 @@ import {doCreateUserWithEmailAndPassword} from '../firebase/FirebaseFunctions';
 import {AuthContext} from '../context/AuthContext';
 import SocialSignIn from './SocialSignIn';
 function SignUp() {
-  const {currentUser} = useContext(AuthContext);
+  const {currentUser,displayName,  setDisplayName} = useContext(AuthContext);
   const [pwMatch, setPwMatch] = useState('');
-  const handleSignUp = async (e) => {
+     const handleSignUp = async (e) => {
     e.preventDefault();
-    const {displayName, email, passwordOne, passwordTwo} = e.target.elements;
+    const {email, passwordOne, passwordTwo} = e.target.elements;
     if (passwordOne.value !== passwordTwo.value) {
       setPwMatch('Passwords do not match');
       return false;
@@ -18,17 +18,17 @@ function SignUp() {
       await doCreateUserWithEmailAndPassword(
         email.value,
         passwordOne.value,
-        displayName.value
+        displayName
       );
     } catch (error) {
       alert(error);
     }
   };
 
-  if (currentUser) {
+   if (currentUser) {
     return <Navigate to='/home' />;
   }
-
+ 
   return (
     <div className='card'>
       <h1>Sign up</h1>
@@ -45,6 +45,9 @@ function SignUp() {
               type='text'
               placeholder='Name'
               autoFocus={true}
+              onChange={(e) => {
+                setDisplayName(e.target.value);
+              }}
             />
           </label>
         </div>

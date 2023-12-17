@@ -102,11 +102,55 @@ const updateUserProbelms = async(id,questions) => {
   return updatedUser;
 }
 
+
+const createUserSignOnSyncUser = async (
+  email,
+  username
+) => {
+  // console.log("inside user create")
+  // console.log("Email = ",email)
+  // console.log("Password = ",username)
+  if(!email || !username) throw "Error: Not all neccessary fields passed to function!";
+
+  
+  const userCollection = await users();
+  const user = await userCollection.findOne({ email: email });
+  if(user){
+    return {
+      "_id": user._id.toString(), 
+      "email": user.email,
+      "username": user.username
+    }
+  
+  }
+  
+  let newUser = {
+    email: email,
+    username: username,
+    problems : []
+  
+  };
+
+  const insertInfo = await userCollection.insertOne(newUser);
+  if (!insertInfo.acknowledged || !insertInfo.insertedId) throw 'Error: Could not add new user!';
+
+  const updatedUserCollection = await users();
+  let createdUser = await updatedUserCollection.findOne({ _id: new ObjectId(insertInfo.insertedId.toString()) });
+  if (!createdUser) throw 'Error: Could not create user!';
+
+  let returnObj = {
+    "_id": createdUser._id.toString(), 
+    "email": createdUser.email,
+    "username": createdUser.username
+  }
+
+  return returnObj;
+};
 const createUserSignOn = async (
   email,
   username
 ) => {
-  if(!email || !username) throw "Error: Not all neccessary fields passed to function!";
+    if(!email || !username) throw "Error: Not all neccessary fields passed to function!";
 
   
   const userCollection = await users();
@@ -137,4 +181,4 @@ const createUserSignOn = async (
   return returnObj;
 };
 
-export default {createUser,checkUser,findUserByEmail,updateUserProbelms,findUserById,createUserSignOn}; 
+export default {createUser,checkUser,findUserByEmail,updateUserProbelms,findUserById,createUserSignOn,createUserSignOnSyncUser}; 

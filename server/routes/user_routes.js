@@ -88,6 +88,7 @@ router
             try {
                 let email = req.params.id;
                 //email = helpers.validateEmail(email);
+                console.log("Email route hit")
                 const user = await userData.findUserByEmail(email);
                 return res.json(user);
             } catch (e) {
@@ -117,14 +118,28 @@ router
 .post(
     async (req, res) => {
         try {
-            console.log("route hit")
+            //console.log("route hit")
             const user = await userData.createUserSignOn(req.body.email,req.body.username);
-            console.log("user = ",user)
+            //console.log("user = ",user)
             return res.json(user);
         } catch (e) {
             return res.status(500).json({ error: e });
         }
     });
         
+router        
+.route('/signOnSyncUser')
+.post(
+    async (req, res) => {
+        try {
+            //console.log("route hit")
+            const user = await userData.createUserSignOnSyncUser(req.body.email,req.body.username);
+            //console.log("user = ",user)
+            return res.json(user);
+        } catch (e) {
+            return res.status(500).json({ error: e });
+        }
+    });
+
 
 export default router;
