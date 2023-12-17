@@ -1,6 +1,6 @@
 import { Router } from 'express';
 const router = Router();
-import { commentData, replyData, userData } from '../data/index.js';
+import { commentData, replyData, discussionData, userData } from '../data/index.js';
 import * as helpers from "../helpers.js";
 import { ObjectId } from 'mongodb';
 import { users } from '../config/mongoCollections.js';
@@ -10,9 +10,16 @@ dotenv.config();
 import { createClient } from 'redis';
 console.log(process.env.REDIS_HOST)
 
-const redisClient = createClient({url: 'redis://' + process.env.REDIS_HOST + ":" + process.env.REDIS_PORT});
-redisClient.connect().then(() => {});
+const redisClient = createClient({ url: 'redis://' + process.env.REDIS_HOST + ":" + process.env.REDIS_PORT });
+redisClient.connect().then(() => { });
 
+const updateAllDiscussionsRedis = async () => {
+    const discussions = await discussionData.getAllDiscussions();
+    let searchKey = "all discussions : ";
+    const flatResult = JSON.stringify(discussions);
+    let setFlatResult = await redisClient.set(searchKey, flatResult);
+    let exipiry = await redisClient.expire(searchKey, 3600);
+  }
 
 router
     .route('/:id') //posting to the discussion id we are commenting on
@@ -29,6 +36,13 @@ router
             } catch (e) {
                 return res.status(400).json({ error: e });
             }
+
+            try { 
+                const checkD = await discussionData.get(req.params.discussionId); 
+            } catch (e){ 
+                return res.status(404).json({ error: e });
+            }
+
             const commentInfo = req.body;
             try {
                 let discussionId = req.params.id;
@@ -43,6 +57,16 @@ router
 
 
                 const createdComment = await commentData.create(discussionId, userId, username, content);
+
+
+                const updatedDiscussion = await discussionData.get(discussionId);
+                //update the dicussion in redis
+                let searchKey = "discussion: " + discussionId;
+                const flatResult = JSON.stringify(updatedDiscussion);
+                let setFlatResult = await redisClient.set(searchKey, flatResult);
+                
+                await updateAllDiscussionsRedis;
+
                 return res.status(200).json(createdComment);
             } catch (e) {
                 return res.status(400).json({ error: e });
@@ -66,8 +90,22 @@ router
                 return res.status(400).json({ error: e });
             }
 
+            try { 
+                const checkD = await discussionData.get(req.params.discussionId); 
+                const checkC = await commentData.get(req.params.commentId); 
+            } catch (e){ 
+                return res.status(404).json({ error: e });
+            }
+
             try {
-                const updatedDiscussion = await commentData.remove(req.params.discussionId, req.params.commentId)
+                const updatedDiscussion = await commentData.remove(req.params.discussionId, req.params.commentId); 
+
+                const updatedDiscussionR = await discussionData.get(discussionId);
+                //update the dicussion in redis
+                let searchKey = "discussion: " + discussionId;
+                const flatResult = JSON.stringify(updatedDiscussionR);
+                let setFlatResult = await redisClient.set(searchKey, flatResult);
+                await updateAllDiscussionsRedis;
                 return res.status(200).json(updatedDiscussion);
             } catch (e) {
                 return res.status(400).json({ error: e });
@@ -90,6 +128,13 @@ router
             } catch (e) {
                 return res.status(400).json({ error: e });
             }
+            try { 
+                const checkD = await discussionData.get(req.params.discussionId); 
+                const checkC = await commentData.get(req.params.commentId); 
+            } catch (e){ 
+                return res.status(404).json({ error: e });
+            }
+
             const replyInfo = req.body;
             try {
                 let discussionId = req.params.discussionId;
@@ -103,7 +148,15 @@ router
                 userId = helpers.checkId(userId, "User ID");
                 username = helpers.validateUsername(username);
 
-                const createdReply = await commentData.create(discussionId, commentId, userId, username, content);
+                const createdReply = await replyData.create(discussionId, commentId, userId, username, content);
+                const updatedDiscussionR = await discussionData.get(discussionId);
+                //update the dicussion in redis
+                let searchKey = "discussion: " + discussionId;
+                const flatResult = JSON.stringify(updatedDiscussionR);
+                let setFlatResult = await redisClient.set(searchKey, flatResult);
+
+                await updateAllDiscussionsRedis;
+
                 return res.status(200).json(createdReply);
             } catch (e) {
                 return res.status(400).json({ error: e });
@@ -127,8 +180,24 @@ router
                 return res.status(400).json({ error: e });
             }
 
+            try { 
+                const checkD = await discussionData.get(req.params.discussionId); 
+                const checkC = await commentData.get(req.params.commentId); 
+                const checkR = await replyData.get(req.params.replyId);
+            } catch (e){ 
+                return res.status(404).json({ error: e });
+            }
+
             try {
-                const updatedDiscussion = await commentData.remove(req.params.discussionId, req.params.commentId,req.params.replyId)
+                const updatedDiscussion = await replyData.remove(req.params.discussionId, req.params.commentId, req.params.replyId)
+                const updatedDiscussionR = await discussionData.get(discussionId);
+                //update the dicussion in redis
+                let searchKey = "discussion: " + discussionId;
+                const flatResult = JSON.stringify(updatedDiscussionR);
+                let setFlatResult = await redisClient.set(searchKey, flatResult);
+
+                await updateAllDiscussionsRedis;
+                
                 return res.status(200).json(updatedDiscussion);
             } catch (e) {
                 return res.status(400).json({ error: e });

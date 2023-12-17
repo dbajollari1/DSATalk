@@ -93,6 +93,7 @@ const getAll = async (pageNum) => {
 };
 
 
+
 const get = async (id) => {
     //code adapted from, getDogById(id) function in, https://github.com/stevens-cs546-cs554/CS-546/blob/master/lecture_04/dogs.js
     if (!id) throw "Error: No ID passed to function!";
@@ -275,13 +276,26 @@ const addLike = async (
 }  
 
 const getAllDiscussions = async () => {
+
+
+
     const discussionCollection = await discussions();
     let discussionList = await discussionCollection.find({}).toArray();
-    if (!discussionList) throw 'Error: Could not get all discussion!';
+    if (!discussionList) throw 'Error: Could not get all discussions!';
     
     discussionList = discussionList.map((element) => {
         element._id = element._id.toString();
         element.user._id = element.user._id.toString();
+        element.comments = element.comments.map((elementComment) => {
+            elementComment._id = elementComment._id.toString();
+            elementComment.authorId= elementComment.authorId.toString();
+            elementComment.replies = elementComment.replies.map((elementReply) => {
+                elementReply._id = elementReply._id.toString();
+                elementReply.authorId= elementReply.authorId.toString();
+                return elementReply;
+            });
+            return elementComment;
+        });
         return element;
     });
     return discussionList;
