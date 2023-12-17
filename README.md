@@ -1,19 +1,30 @@
 # DSATalk
 CS554 - Final Project
 
-## Running the application with Docker 
+## How to run the application
  - First you must install docker, can be found here [https://docs.docker.com/desktop/install/mac-install/]
  - Also please note that the following has only been tested with a Macbook Pro using apple silicon
- - Next since this application is using redis, we need to run a dockerized version of it locally
- 1. `docker network create myapp`
-### Server
-1. Go to server directory and run the following command in terminal.\
-    `docker build -t [name of image] .`
-2. Now run the image with the follwoing command.  Following command assumes you named the image "server".\
-    `docker run --rm -it -p 3000:3000/tcp server:latest `
-### Frontend
-1. Go to frontend directory and run the following command in terminal\
-    `docker build -t [name of image] .`
-2. Now run the image with the follwoing command. Following command assumes you named the image "frontend"\
-    `docker run --rm -it -p 5173:5173/tcp frontend:latest `
+ - Next since this application is using redis, we need to run a dockerized version of it locally, this is handled in the docker compose file, but make sure to stop your local redis instance if running with docker
+ - To run the application locally(without docker) you can pull the code from github, go into the frontend and run the command
+ 1. `npm run dev`
+ - Then you can go into the server folder and run the following command to populate the database with dummy data, and then run the server
+1. `npm run seed`
+2. `npm run start`
 
+## Running it with docker
+1. First go to the server folder and run the following command to populate the database
+    `npm run seed`
+2. Then in the root of the project folder run the following command in your terminal. This will run the commands to build the docker container for the frontend,server, and redis instance
+    `docker-compose up`
+3. After the above command the frontend and server should be running. The frontend will be on port 5173 and the server on port 3000. Once you are in the frontend of the application you can create a user(dont with firebase) and start using the application to view and create dicsussions
+4. To stop the docker containers from running you can run the following command. After you can then manually delete them
+    `docker-compose down`
+5. If you ever want to get details about the current running docker containers you can use the following command
+    `docker-compose ps`
+6. Important note: When running the application in docker container navigate to the env file and make sure the value for REDIS_HOST is my-redis-service. This will tell the application that we are running redis from the docker container. If you would like the run on your local machine have the value be 127.0.0.1
+
+- The code for the docker compose file was adapted from the following sources
+    1. [https://chadsmith-software.medium.com/docker-service-inter-communication-setting-up-redis-and-a-web-app-with-docker-compose-b1cf353eb7a9]
+    2. [https://dev.to/marcelkatz/nodejs-and-redis-deployed-in-docker-containers-using-docker-compose-then-load-balancing-the-nodejs-servers-with-nginx-4omc]
+    3. [https://collabnix.com/dockerizing-a-nodejs-express-redis-with-nginx-proxy-using-docker-compose/]
+    4. [https://stackoverflow.com/questions/56533022/setting-up-node-with-redis-using-docker-compose]
