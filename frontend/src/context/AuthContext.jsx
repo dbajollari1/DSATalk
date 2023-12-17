@@ -5,36 +5,22 @@ export const AuthContext = React.createContext();
 
 export const AuthProvider = ({children}) => {
   const [currentUser, setCurrentUser] = useState(null);
+  const [displayName, setDisplayName] = useState("");
   const [loadingUser, setLoadingUser] = useState(true);
   const auth = getAuth();
   useEffect(() => {
     let myListener = onAuthStateChanged(auth, (user) => {
       if(user){
-      setCurrentUser(user);
-      saveUserToBackend(user);
+        setCurrentUser(user);
       }
-      console.log('onAuthStateChanged', user);
       setLoadingUser(false);
     });
     return () => {
       if (myListener) myListener();
     };
-  }, []);
+  },[auth, currentUser]);
 
-  // function to make a backend request to save current user to mongodb
-  const saveUserToBackend = async (user) => {
-    try {
-      const response = await axios.post('http://localhost:3000/users/addUser', {
-        email: user.email,
-        username: user.displayName,
-        // Add other user data as needed
-      });
-
-      } catch (error) {
-      // Handle errors
-      console.error('Error saving user to backend:', error.message);
-    }
-  };
+  
 
   if (loadingUser) {
     return (
@@ -45,7 +31,9 @@ export const AuthProvider = ({children}) => {
   }
 
   return (
-    <AuthContext.Provider value={{currentUser}}>
+    <AuthContext.Provider
+      value={{ currentUser, setCurrentUser, displayName, setDisplayName }}
+    >
       {children}
     </AuthContext.Provider>
   );

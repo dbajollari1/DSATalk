@@ -1,14 +1,23 @@
-import React, {useContext} from 'react';
+import React, {useContext,useState} from 'react';
 import {AuthContext} from '../context/AuthContext';
+import {getAuth} from 'firebase/auth';
+
 import '../App.css';
 
 function Home() {
-  const {currentUser} = useContext(AuthContext);
-  console.log(currentUser);
+  const { currentUser, displayName, setDisplayName} = useContext(AuthContext);
+  const [currentUser1, setCurrentUser] = useState(null);
+  const auth = getAuth();
+  const [loadingUser, setLoadingUser] = useState(true);
+  const [hasReloaded, setHasReloaded] = useState(false);
+
+   if(displayName.length === 0){
+     setDisplayName(currentUser.displayName)
+   }
   return (
-    <div className='card'>
+        <div className='card'>
       <h2>
-        Hello {currentUser && currentUser.displayName}, this is the Protected
+        Hello {currentUser && displayName }, this is the Protected
         Home page
       </h2>
     </div>

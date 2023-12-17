@@ -180,4 +180,15 @@ export const validateName = (name) => {
     return email;
   }
 
+  export const isNumberArray = (arr) =>{
+    // Check if arr is an array
+    if (!Array.isArray(arr)) {
+        return false;
+    }
+
+    // Check if every element in the array is an integer
+    return arr.every(element => Number.isInteger(element));
+}
+
+
 

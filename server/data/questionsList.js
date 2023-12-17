@@ -381,30 +381,40 @@ let allQuestions = [
       "title": "Valid Parentheses",
       "difficulty": "Medium",
       "tags": ["String", "Stack"],
+      "companies": ["Discover"],
+
       "link": "https://leetcode.com/problems/valid-parentheses/"
     },
     {
       "title": "Valid Palindrome",
       "difficulty": "Easy",
       "tags": ["String", "Two Pointers"],
+      "companies": ["Amazon", "Microsoft", "Meta"],
+
       "link": "https://leetcode.com/problems/valid-palindrome/"
     },
     {
       "title": "Longest Palindromic Substring",
       "difficulty": "Medium",
       "tags": ["String", "Dynamic Programming"],
+      "companies": ["Tesla", "Microsoft", "Google"],
+
       "link": "https://leetcode.com/problems/longest-palindromic-substring/"
     },
     {
       "title": "Palindromic Substrings",
       "difficulty": "Medium",
       "tags": ["String", "Dynamic Programming"],
+      "companies": ["Yandex", "Apple", "Google"],
+
       "link": "https://leetcode.com/problems/palindromic-substrings/"
     },
     {
       "title": "Encode and Decode Strings (Leetcode Premium)",
       "difficulty": "Medium",
       "tags": ["String"],
+      "companies": [ "Microsoft", "Google"],
+
       "link": "https://leetcode.com/problems/encode-and-decode-strings/"
     },
     {

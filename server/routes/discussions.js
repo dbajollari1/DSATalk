@@ -159,15 +159,15 @@ router
         let url = discussionInfo.url;
         if (!title || !content || !userId || !username) throw 'Not all neccessary fields provided in request body';
 
-        title = helpers.checkTitle(title);
-        content = helpers.checkContent(content);
-        userId = helpers.checkId(userId, "User ID");
-        username = helpers.validateUsername(username);
-        if (tags) {
-          tags = helpers.checkTags(tags);
-        } else {
+        //title = helpers.checkTitle(title);
+        //content = helpers.checkContent(content);
+        //userId = helpers.checkId(userId, "User ID");
+        //username = helpers.validateUsername(username);
+        //if (tags) {
+          //tags = helpers.checkTags(tags);
+        //} else {
           tags = [];
-        }
+        //}
         if (image) {
           image = "" //will change later
         } else {
@@ -179,7 +179,6 @@ router
           url = ""
         }
 
-
         const createdDiscussion = await discussionData.create(discussionInfo.title, discussionInfo.userId, discussionInfo.username, discussionInfo.content, discussionInfo.tags, discussionInfo.image, discussionInfo.url);
         return res.status(200).json(createdDiscussion);
       } catch (e) {
@@ -189,7 +188,6 @@ router
     .get(
       async (req, res) => {
           try {
-            console.log("getting all dis")
                   let discussions = await discussionData.getAllDiscussions();
                   return res.json(discussions);
               }
