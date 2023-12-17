@@ -17,7 +17,7 @@ redisClient.connect().then(() => { });
 AWS.config.update({
   accessKeyId: process.env.ACCESS_KEY,
   secretAccessKey: process.env.SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION, 
+  region: process.env.AWS_REGION,
 });
 const s3 = new AWS.S3({ signatureVersion: 'v4' });
 const upload = multer({ storage: multer.memoryStorage() });
@@ -40,6 +40,13 @@ const saveImage = async (fileName, fileBuffer, mimetype) => {
   }
 }
 
+const updateAllDiscussionsRedis = async () => {
+  const discussions = await discussionData.getAllDiscussions();
+  let searchKey = "all discussions : ";
+  const flatResult = JSON.stringify(discussions);
+  let setFlatResult = await redisClient.set(searchKey, flatResult);
+  let exipiry = await redisClient.expire(searchKey, 3600);
+}
 
 // router.post('/upload', upload.single('image'), async (req, res) => {
 //   try {
@@ -72,10 +79,10 @@ router
       }
       const pagenum = req.params.pagenum;
       let searchKey = "discussion page: " + pagenum;
-      let exists = await client.exists(searchKey);
+      let exists = await redisClient.exists(searchKey);
       if (exists) {
         console.log('Results  in cache');
-        const searchResults = await client.get(searchKey);
+        const searchResults = await redisClient.get(searchKey);
         //const searchResultsJSON = unflatten(searchResults);
         const searchResultsJSON = JSON.parse(searchResults)
         return res.status(200).json(searchResultsJSON)
@@ -100,7 +107,8 @@ router
         }
         let searchKey = "discussion page: " + pagenum;
         const flatResult = JSON.stringify(discussions);
-        let setFlatResult = await client.set(searchKey, flatResult);
+        let setFlatResult = await redisClient.set(searchKey, flatResult);
+        let exipiry = await redisClient.expire(searchKey, 3600);
         return res.json(discussions);
       } catch (e) {
         return res.status(500).json({ error: e });
@@ -144,7 +152,7 @@ router
           const discussion = await discussionData.get(discussionId);
           let searchKey = "discussion: " + discussionId;
           const flatResult = JSON.stringify(discussion);
-          let setFlatResult = await client.set(searchKey, flatResult);
+          let setFlatResult = await redisClient.set(searchKey, flatResult);
           return res.status(200).json(discussion);
         } catch (e) {
           res.status(404).json({ error: e });
@@ -169,6 +177,11 @@ router
         return res.status(400).json({ error: e });
       }
       const discussionId = req.params.id;
+      try {
+        const checkD = await discussionData.get(discussionId);
+      } catch (e) {
+        return res.status(404).json({ error: e });
+      }
       const discussionInfo = req.body;
       try {
         if (!discussionInfo || Object.keys(discussionInfo).length === 0) throw 'There are no fields in the request body';
@@ -177,6 +190,8 @@ router
         discussionInfo.title = helpers.validateTitle(discussionInfo.title);
         discussionInfo.content = helpers.validateContent(discussionInfo.content);
         //im guessing this will be used to update the likes and array of replies
+
+        await updateAllDiscussionsRedis;
 
         const createdDiscussion = await discussionData.updateDiscussion(discussionInfo.title, discussionInfo.content, req.session.user._id);
         return res.status(200).json(createdDiscussion);
@@ -206,6 +221,7 @@ router
 
         title = helpers.checkTitle(title);
         content = helpers.checkContent(content);
+
         userId = helpers.checkId(userId, "User ID");
         //username = helpers.validateUsername(username);
         if (tags) {
@@ -232,23 +248,36 @@ router
           url = ""
         }
 
+
         const createdDiscussion = await discussionData.create(discussionInfo.title, discussionInfo.userId, discussionInfo.username, discussionInfo.content, tags, discussionInfo.image, discussionInfo.url);
+        await updateAllDiscussionsRedis
         return res.status(200).json(createdDiscussion);
       } catch (e) {
         return res.status(400).json({ error: e });
       }
     })
   .get(
+    async (req, res, next) => {
+      let searchKey = "all discussions : ";
+      let exists = await redisClient.exists(searchKey);
+      if (exists) {
+        console.log('Results  in cache');
+        const searchResults = await redisClient.get(searchKey);
+        const searchResultsJSON = JSON.parse(searchResults)
+        return res.status(200).json(searchResultsJSON)
+      } else {
+        next();
+      }
+    },
     async (req, res) => {
       try {
-        let discussions = await discussionData.getAllDiscussions();
+        const discussions = await discussionData.getAllDiscussions();
+        await updateAllDiscussionsRedis;
         return res.json(discussions);
-      }
-
-      catch (e) {
+      } catch (e) {
         return res.status(500).json({ error: e });
       }
-    });
+    })
 
 //will need to change so can work with users firebase credentials
 router
@@ -275,13 +304,17 @@ router
 
       try {
         const newDiscussion = await discussionData.addLike(req.params.id, req.session.user.id, req.session.user.username);
-        return res.status(200).json(newRecipe);
+        const updatedDiscussion = await discussionData.get(discussionId);
+        //update the dicussion in redis
+        let searchKey = "discussion: " + discussionId;
+        const flatResult = JSON.stringify(updatedDiscussion);
+        let setFlatResult = await redisClient.set(searchKey, flatResult);
+
+        await updateAllDiscussionsRedis
+
+        return res.status(200).json(updatedDiscussion);
       } catch (e) {
-        if (e === "Error: No discussion found with that ID") {
-          return res.status(404).json({ error: e });
-        } else {
-          return res.status(500).json({ error: e });
-        }
+        return res.status(500).json({ error: e });
       }
     });
 router.delete('/:id', async (req, res) => {
@@ -293,7 +326,7 @@ router.delete('/:id', async (req, res) => {
     
     // Assuming you have a method in your data module to delete a discussion
     await discussionData.remove(discussionId);
-
+    await updateAllDiscussionsRedis;
     return res.status(200).json({ message: 'Discussion deleted successfully' });
   } catch (error) {
     console.error('Error deleting discussion', error);
