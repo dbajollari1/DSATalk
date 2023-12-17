@@ -1,6 +1,7 @@
 import * as helpers from "../helpers.js";
 import { discussions } from '../config/mongoCollections.js';
 import { users } from '../config/mongoCollections.js';
+import {replyData} from './index.js'
 import { ObjectId } from 'mongodb';
 
 const create = async (
@@ -115,8 +116,12 @@ const remove = async (discussionId,commentId) => {
     if (checkComment === null) throw "Error: No commment with that ID found!";
     discussionId = discussionId[0]._id.toString();
 
-
-
+    //check to see if comments have replies and if so delete those replies 
+    if (checkComment.replies.length !== 0) { 
+        for(let i = 0;i < checkComment.replies.length; i++) { 
+            let deletedReply = await replyData.remove(discussionId,commentId,checkComment.replies[i]._id.toString());
+        }
+    }
     const updatedInfoDiscussion = await discussionCollection.findOneAndUpdate(
         { _id: new ObjectId(discussionId) },
         { $pull: { comments: { _id: new ObjectId(commentId) } } },

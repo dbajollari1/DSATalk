@@ -1,6 +1,8 @@
 import { Router } from 'express';
 const router = Router();
 import { discussionData, userData } from '../data/index.js';
+import multer from 'multer';
+import AWS from 'aws-sdk'
 import * as helpers from "../helpers.js";
 import { ObjectId } from 'mongodb';
 import { users } from '../config/mongoCollections.js';
@@ -8,11 +10,56 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 import { createClient } from 'redis';
-console.log(process.env.REDIS_HOST)
+const redisClient = createClient({ url: 'redis://' + process.env.REDIS_HOST + ":" + process.env.REDIS_PORT });
+redisClient.connect().then(() => { });
 
-const redisClient = createClient({url: 'redis://' + process.env.REDIS_HOST + ":" + process.env.REDIS_PORT});
-redisClient.connect().then(() => {});
 
+AWS.config.update({
+  accessKeyId: process.env.ACCESS_KEY,
+  secretAccessKey: process.env.SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION, 
+});
+const s3 = new AWS.S3({ signatureVersion: 'v4' });
+const upload = multer({ storage: multer.memoryStorage() });
+
+const saveImage = async (fileName, fileBuffer, mimetype) => {
+  try {
+    const params = {
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: `${Date.now()}-${fileName}`,
+      Body: fileBuffer,
+      ContentType: mimetype,
+      ACL: 'public-read',
+    };
+
+    const data = await s3.upload(params).promise();
+    return data.Location;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+
+// router.post('/upload', upload.single('image'), async (req, res) => {
+//   try {
+//     console.log(req)
+//     const params = {
+//       Bucket: process.env.AWS_BUCKET_NAME,
+//       Key: `${req.file.originalname}`,
+//       Body: req.file.buffer,
+//       ContentType: req.file.mimetype,
+//       ACL: 'public-read',
+//     };
+
+//     const data = await s3.upload(params).promise();
+//     // Handle successful upload
+//     res.json({ imageUrl: data.Location });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Failed to upload image' });
+//   }
+// })
 
 router
   .route('/:pagenum')
@@ -140,22 +187,20 @@ router
     })
 router
   .route('/')
-  .post(
-    // async (req, res, next) => {
-    //   if (!req.session.user) {
-    //     return res.status(401.).json({ error: "You must be logged in to look at the discussions" });
-    //   }
-    //   next();
-    // },
+  .post(upload.single('image'),
     async (req, res) => {
-      const discussionInfo = req.body;
+
+
       try {
+        const jsonData = JSON.parse(req.body.json_data);
+        const discussionInfo = jsonData;
         let title = discussionInfo.title;
         let content = discussionInfo.content;
         let userId = discussionInfo.userId;
         let username = discussionInfo.username;
         let tags = discussionInfo.tags;
-        let image = discussionInfo.image;
+        let image;
+        //let image = discussionInfo.image;
         let url = discussionInfo.url;
         if (!title || !content || !userId || !username) throw 'Not all neccessary fields provided in request body';
 
@@ -164,12 +209,20 @@ router
         //userId = helpers.checkId(userId, "User ID");
         //username = helpers.validateUsername(username);
         //if (tags) {
-          //tags = helpers.checkTags(tags);
+        //tags = helpers.checkTags(tags);
         //} else {
-          tags = [];
+        tags = [];
         //}
-        if (image) {
-          image = "" //will change later
+
+        if (req.file) { //image passed
+          let fileName = req.file.originalname;
+          let fileBody = req.file.buffer;
+          let mimetype = req.file.mimetype;
+          try {
+            image = await saveImage(fileName, fileBody, mimetype);
+          } catch (e) {
+            return res.status(400).json({ error: e })
+          }
         } else {
           image = ""
         }
@@ -185,17 +238,17 @@ router
         return res.status(400).json({ error: e });
       }
     })
-    .get(
-      async (req, res) => {
-          try {
-                  let discussions = await discussionData.getAllDiscussions();
-                  return res.json(discussions);
-              }
-              
-          catch (e) {
-              return res.status(500).json({ error: e });
-          }
-      });
+  .get(
+    async (req, res) => {
+      try {
+        let discussions = await discussionData.getAllDiscussions();
+        return res.json(discussions);
+      }
+
+      catch (e) {
+        return res.status(500).json({ error: e });
+      }
+    });
 
 //will need to change so can work with users firebase credentials
 router
