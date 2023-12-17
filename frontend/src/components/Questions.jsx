@@ -10,12 +10,13 @@ import axios from 'axios';
 function Questions() {
     const [checkedItems, setCheckedItems] = useState({});
     const {currentUser} = useContext(AuthContext);
+    const [visitedLinkColor, setVisitedLinkColor] = useState('rgb(0, 0, 226)');
 
-
+    useEffect(() => {
+      setVisitedLinkColor('rgb(0, 0, 226)')
+    }, [visitedLinkColor]);
     // Function to handle checkbox changes
     const handleCheckboxChange = (index) => {
-        console.log(checkedItems);
-
     setCheckedItems((prevCheckedItems) => {
         const keyToCheck = String(index);
 
@@ -28,31 +29,41 @@ function Questions() {
         return { ...prevCheckedItems }; // Return the updated state
     });
 
-    console.log("checked = ", checkedItems);
     };
 
     // Function to save user progress
   const handleSaveButtonClick = async () => {
     try {
+        if(!currentUser){
+          alert("You need to be logged in to save preferences!")
+          return
+        }
 
         let emailId = currentUser.email;
-        let curUser = await axios.get(`http://localhost:3000/users/email/${emailId}`);
-        console.log("Checked id = ",curUser.data._id)
-        console.log("Checked list = ",checkedItems)
+        const headers = {
+          'Authorization': `Bearer ${currentUser.accessToken}`, 
+          'Content-Type': 'application/json',
+        };
+        
+        let curUser = await axios.get(`http://localhost:3000/users/email/${emailId}`,{headers});
+        
+        
         const temp = [];
         for (const key in checkedItems) {
             if (checkedItems[key]) {
-              // Do something with each key
               temp.push(parseInt(key));
             }
           }
-        console.log("temp = ",temp)
         const reqData = {
             "questions" : temp
         }  
-        let updatedUser = await axios.put(`http://localhost:3000/users/addProblem/${curUser.data._id}`,reqData)
-        console.log("Updated user = ",updatedUser.data)
-        console.log('User progress saved successfully');
+        let updatedUser = await axios.put(`http://localhost:3000/users/addProblem/${curUser.data._id}`,reqData,{headers})
+        if(updatedUser.status === 200){
+        alert('User progress saved successfully');
+        }
+        else{
+          alert('Could not save preferences')
+        }
     } 
     catch (error) {
         console.error('Error saving user progress', error);
@@ -61,15 +72,15 @@ function Questions() {
   useEffect(() => {
     // Initialize checkedItems with the problems from the currentUser
     const fetchData = async () => {
-        console.log("Fired ");
-        //console.log("current user ", currentUser);
         if (currentUser) {
             try {
                 // Use asynchronous operations here
+                const headers = {
+                  'Authorization': `Bearer ${currentUser.accessToken}`, 
+                  'Content-Type': 'application/json',
+                };
                 let emailId = currentUser.email;
-                let curUser = await axios.get(`http://localhost:3000/users/email/${emailId}`);
-                console.log("Current user ",curUser)
-                const initialCheckedItems = {};
+                let curUser = await axios.get(`http://localhost:3000/users/email/${emailId}`,{headers});                const initialCheckedItems = {};
                 curUser.data.problems.forEach((problemId) => {
                     initialCheckedItems[problemId] = true;
                 });
@@ -110,7 +121,7 @@ function Questions() {
         />
       <div className='question' key={index}>
         
-        <a href={question.link} target='_blank' rel='noopener noreferrer'>
+        <a href={question.link} target='_blank' rel='noopener noreferrer' style={{ color: visitedLinkColor }}>
           <h4>{question.title}</h4>
         </a>
       </div>

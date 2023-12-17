@@ -142,5 +142,15 @@
 
 .discussion-link {
 	text-decoration: none; /* Remove underline */
-	color: inherit; /* Use the default text color */
+	color: inherit; 
   }
+
+  .question-container  {
+	display: flex;
+	align-items: center; 
+	margin-right: 10px;
+  }
+
+  
+  
+ 

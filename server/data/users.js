@@ -89,7 +89,7 @@ const findUserById = async(id) =>{
   return user;
 }
 const updateUserProbelms = async(id,questions) => {
-  if (id === undefined) throw 'No id provided';
+    if (id === undefined) throw 'No id provided';
   if (!questions) throw 'No questions provided';
   const userCollection = await users();
   // we use $set to update only the fields specified
@@ -99,7 +99,7 @@ const updateUserProbelms = async(id,questions) => {
   );
 
   const updatedUser = await findUserById(id);
-  return updatedUser;
+    return updatedUser;
 }
 
 
