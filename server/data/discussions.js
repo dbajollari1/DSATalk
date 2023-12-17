@@ -15,7 +15,7 @@ const create = async (
     url
 ) => {
     title = helpers.checkTitle(title); 
-    //userId = helpers.checkId(userId,"User ID");
+    userId = helpers.checkId(userId,"User ID");
     //username = helpers.validateUsername(username);
     content = helpers.checkContent(content);
     if(tags) { 
@@ -63,8 +63,6 @@ const create = async (
     const discussionCollection = await discussions();
     const insertInfo = await discussionCollection.insertOne(newDiscussion);
     if (!insertInfo.acknowledged || !insertInfo.insertedId) throw 'Error: Could not add new discussion!';
-    
-    console.log("insertInfo = ",insertInfo)
     const newId = insertInfo.insertedId.toString();
   
     const discussion = await get(newId);
@@ -121,14 +119,15 @@ const remove = async (id) => {
     if (!id) throw "Error: No ID passed to function!";
     id = helpers.checkId(id, "ID")
     const discussionCollection = await discussions();
-
+    console.log("inside func ",id)
     const deletionInfo = await discussionCollection.findOneAndDelete({
         _id: new ObjectId(id)
     });
-    if (deletionInfo.lastErrorObject.n === 0) {
+
+    if (!deletionInfo || !deletionInfo._id) {
         throw `Could not delete discussion with id of ${id}`;
     }
-    return `${deletionInfo.value.title} has been successfully deleted!`;
+    return `${deletionInfo.title} has been successfully deleted!`;
 };
 
 

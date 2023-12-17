@@ -60,6 +60,78 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
     return true;
   };
 
+  const checkTitle = (title) => {
+    if (!title){ 
+    alert(`Error: You must supply a title!`);
+    return
+    }
+    if (typeof title !== 'string') {
+    alert(`Error: title must be a string!`);
+    return
+    }
+    title = title.trim();
+    if (title.length === 0){
+      alert(`Error: title cannot be an empty string or string with just spaces`);
+      return
+    }
+    if (!isNaN(title)){
+      alert(`Error: this is not a valid value for title it only contains digits`);
+      return
+    }
+    if (title.length < 5){
+      alert( `Error: title length must be greater than or equal to 5 characters`)
+      return
+    }
+    return title
+  }
+
+  const checkContent = (content) => {
+    if (!content){
+     alert (`Error: You must supply content!`)
+    return
+    }
+    if (typeof content !== 'string'){
+    
+      alert(`Error: content must be a string!`);
+      return
+    }
+    content = content.trim();
+    if (content.length === 0){
+      alert(`Error: content cannot be an empty string or string with just spaces`);
+      return 
+    }
+    if (!isNaN(content))
+    {
+      alert(`Error: this is not a valid value for content it only contains digits`);
+      return
+    }
+    if (content.length < 50){
+       alert(`Error: content length must be greater than or equal to 50 characters`);
+       return
+      }
+    return content
+  }
+
+
+  const isValidTagList = (input) => {
+    // Split the input by commas
+    const tags = input.split(',');
+  
+    // Check if each tag is a non-empty string
+    return tags.every(tag => typeof tag === 'string' && (tag.trim() === '' || isNaN(tag.trim())));
+  };
+  const checkURL = (url) => {
+    if (typeof url !== 'string') throw `Error: url must be a string!`;
+    try {
+      new URL(url);
+      url = url.trim();
+      return url
+    } catch (err) {
+      alert( "Error: invalid url!");
+    }
+  };
+
+
   const onSubmitDiscussion = async () => {
     let validation = true;
     const emailId = currentUser.email;
@@ -68,14 +140,14 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
         'Content-Type': 'application/json',
       };
     const curUser = await axios.get(`http://localhost:3000/users/email/${emailId}`,{headers})
-    validation = validation && checkString(discussionDetails.title, 'Title');
-    validation = validation && checkString(discussionDetails.content, 'Content');
-    validation = validation && checkString(discussionDetails.tags, 'tags');
-    validation = validation && checkString(discussionDetails.image, 'image');
-    validation = validation && checkString(discussionDetails.url, 'url');
+     validation = validation && checkTitle(discussionDetails.title, 'Title');
+     validation = validation && checkContent(discussionDetails.content, 'Content');
+     if(!isValidTagList(discussionDetails.tags)){
+      alert("Tags should be a comma separated list of alpha-numeric values")
+      return;
 
-    // Add validation for other fields as needed
-    
+     }
+    validation = validation || discussionDetails.url && checkURL(discussionDetails.url, 'url');    
     if (!validation) {
       alert('Invalid Input');
       return;
@@ -104,7 +176,6 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
         }
       }
       );
-      console.log("Response ",response)
       if(response.status === 200){
         handleDiscussionCompletion(1)
       }
@@ -123,7 +194,8 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
   };
 
   const handleValueChange = (event) => {
-    setDiscussionDetails({ ...discussionDetails, [event.target.name]: event.target.value });
+        setDiscussionDetails({ ...discussionDetails, [event.target.name]: event.target.value });
+  
   };
 
 
@@ -157,7 +229,7 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
         
         <TextField
           id="outlined-basic"
-          label="tags"
+          label="Enter a comma-separated list of values"
           variant="outlined"
           name="tags"
           onChange={handleValueChange}
