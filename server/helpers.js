@@ -54,7 +54,7 @@ export const validateUsername = (username) => {
           throw 'Error: Username must contain valid alphanumeric characters'
     }
   }
-  if (username.length < 5) throw 'Error: Username must be at least 5 characters long';
+  if (username.length < 3) throw 'Error: Username must be at least 3 characters long';
   return username;
 }
 
@@ -189,6 +189,7 @@ export const validateName = (name) => {
     // Check if every element in the array is an integer
     return arr.every(element => Number.isInteger(element));
 }
+
 
 
 

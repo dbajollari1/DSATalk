@@ -12,28 +12,7 @@ const redisClient = createClient({url: 'redis://' + process.env.REDIS_HOST + ":"
 redisClient.connect().then(() => {});
 
 
-router
-    .route('/')
-    .post(
-        async (req, res) => {
-            try {
-                let name = req.body.name;
-                let username = req.body.username;
-                if (!name || !username) throw 'You must provide a name and username';
-                name = name.trim();
-                username = username.trim();
-                if (name.length === 0 || username.length === 0) throw 'You must provide a name and username';
-                let password = req.body.password;
-                name = helpers.validateName(name);
-                username = helpers.validateUsername(username);
-                password = helpers.validatePassword(password);
 
-                const user = await userData.createUser(name, username, password);
-                return res.json(user);
-            } catch (e) {
-                return res.status(500).json({ error: e });
-            }
-        });
 
 router
     .route('/:id')
@@ -58,27 +37,7 @@ router
             }
         });
 
-//might not use because auth is firebase
-router
-    .route('/check')
-    .get(
-        async (req, res) => {
-            try {
-                let username = req.query.username;
-                let password = req.query.password;
-                if (!username || !password) throw 'You must provide a username and password';
-                username = username.trim();
-                password = password.trim();
-                if (username.length === 0 || password.length === 0) throw 'You must provide a username and password';
-                username = helpers.validateUsername(username);
-                password = helpers.validatePassword(password);
 
-                const user = await userData.checkUser(username, password);
-                return res.json(user);
-            } catch (e) {
-                return res.status(500).json({ error: e });
-            }
-        });
         
 //right now when creating a user we don't include an email?
 router

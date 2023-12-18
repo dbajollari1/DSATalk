@@ -1,7 +1,7 @@
 import * as helpers from "../helpers.js";
 import { discussions } from '../config/mongoCollections.js';
 import { users } from '../config/mongoCollections.js';
-import {replyData} from './index.js'
+import replyData from './replies.js';
 import { ObjectId } from 'mongodb';
 
 const create = async (
