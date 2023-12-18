@@ -4,14 +4,15 @@ import {AuthContext} from '../context/AuthContext';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import AddComment from './AddComment'; 
+import AddCommentAndReply from './AddCommentAndReply'; 
+
 
 
 function Discussion() {
     const [discussion, setDiscussion] = useState([]);
     const [curUser, setCurUser] = useState('');
     const {currentUser} = useContext(AuthContext);
-    const [showAddReplForm, setShowAddReplyForm] = useState(false);
+    const [showAdd, setShowAddReplyForm] = useState(false);
     const [showAddCommentForm, setShowAddCommentForm] = useState(false);
     const { id } = useParams();
     const history = useNavigate();
@@ -19,7 +20,6 @@ function Discussion() {
     useEffect(() => {
         const fetchDiscussion = async () => {
             try{
-            console.log(currentUser.accessToken)
             const headers = {
                 'Authorization': `Bearer ${currentUser.accessToken}`, 
                 'Content-Type': 'application/json',
@@ -74,43 +74,6 @@ function Discussion() {
             console.error('Error deleting discussion', error);
         }
     }
-
-    const handleAddComment = async (discussionId) => {
-
-        try {
-
-            const headers = {
-                'Authorization': `Bearer ${currentUser.accessToken}`, 
-                'Content-Type': 'application/json',
-            }
-            const res = await axios.post(`http://localhost:3000/discussions/${discussionId}/comments`, { headers });
-            alert('Comment added successfully!');
-            const response = await axios.get('http://localhost:3000/discussions', { headers });
-            setDiscussion(response.data);
-        }
-        catch (error) {
-            console.error('Error adding comment', error);
-        }
-    }
-
-    const handleAddReply = async (discussionId, CommentId) => {
-
-        try {
-
-            const headers = {
-                'Authorization': `Bearer ${currentUser.accessToken}`, 
-                'Content-Type': 'application/json',
-            }
-            const res = await axios.post(`http://localhost:3000/discussions/${discussionId}/comments/${CommentId}/replies`, { headers });
-            alert('Reply added successfully!');
-            const response = await axios.get('http://localhost:3000/discussions', { headers });
-            setDiscussion(response.data);
-        }
-        catch (error) {
-            console.error('Error adding reply', error);
-        }
-    }
-
     
 
     const closeAddReplyForm = () => {
@@ -142,7 +105,7 @@ function Discussion() {
                     <h3>Comments</h3>
                     <button onClick={() => setShowAddCommentForm(!showAddCommentForm)}>Add Comment</button>
                     {showAddCommentForm && (
-                        <AddComment
+                        <AddCommentAndReply
                             open={showAddCommentForm}
                             closeAddCommentForm={closeAddCommentForm}
                             Id={discussion._id}
@@ -153,6 +116,23 @@ function Discussion() {
                         <div key={comment._id}>
                             <h4>{comment.authorUsername}</h4>
                             <p>{comment.content}</p>
+                            {comment.replies?.map((reply) => (
+                                <div key={reply._id}>
+                                    <h5>{reply.authorUsername}</h5>
+                                    <p>{reply.content}</p>
+                                </div>
+                            ))}
+                            <button onClick={() => setShowAddReplyForm(!showAddReplyForm)}>Add Reply</button>
+                            {showAddReplyForm && (
+                                <AddCommentAndReply
+                                    open={showAdd}
+                                    closeAddReplyForm={closeAddReplyForm}
+                                    Id={discussion._id}
+                                    commentId={comment._id}
+                                    handleClose={() => setShowAddReplyForm(!showAdd)}
+                                    reply={true}
+                                />
+                            )}
                         </div>
                     ))}
                 </div>

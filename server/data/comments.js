@@ -87,21 +87,23 @@ const get = async (
     commentId = helpers.checkId(commentId, "Comment ID");
     const discussionCollection = await discussions();
 
-    let comments = await discussionCollection.find({ "comments": { $elemMatch: { "_id": new ObjectId(commentId) } } }).toArray();
-
-    let comment = null;
-    for (let i = 0; i < comments.length; i++) {
-        if (comments[i]._id.toString() === commentId) {
-            comments[i]._id = commens[i]._id.toString();
-            comment = comments[i]._id;
-        }
-    }
-    if (comment === null) {
+    const comments = await discussionCollection.find({ "comments": { $elemMatch: { "_id": new ObjectId(commentId) } } }).toArray();
+    if (comments === null) {
         throw "Error: No comment found with that ID!";
     }
-    for (let j = 0; j < comment.replies.length; j++) {
-        comment.replies[j]._id = comments.replies[j]._id.toString();
-    }
+    let comment = comments[0].comments.filter((element) => {
+        return element._id.toString() === commentId;
+    });
+    
+    comment = comment[0];
+    comment._id = comment._id.toString();
+    comment.authorId = comment.authorId.toString();
+    let replies = comment.replies;
+    replies = replies.map((element) => {
+        element._id = element._id.toString();
+        return element;
+    });
+    comment.replies = replies;
     return comment;
 }
 
