@@ -38,17 +38,21 @@ router
             }
 
             try { 
-                const checkD = await discussionData.get(req.params.discussionId); 
+                const checkD = await discussionData.get(req.params.id); 
             } catch (e){ 
+                console.log("Here")
                 return res.status(404).json({ error: e });
             }
-
-            const commentInfo = req.body;
+            const jsonData = JSON.parse(req.body.json_data);
+            const commentInfo = jsonData;
             try {
                 let discussionId = req.params.id;
                 let content = commentInfo.content;
                 let userId = commentInfo.userId;
                 let username = commentInfo.username;
+                console.log(content)
+                console.log(userId)
+                console.log(username)
                 if (!content || !userId || !username) throw 'Not all neccessary fields provided in request body';
 
                 content = helpers.checkContent(content);
@@ -58,7 +62,7 @@ router
 
                 const createdComment = await commentData.create(discussionId, userId, username, content);
 
-
+                console.log("Here")
                 const updatedDiscussion = await discussionData.get(discussionId);
                 //update the dicussion in redis
                 let searchKey = "discussion: " + discussionId;
