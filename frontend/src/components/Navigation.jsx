@@ -12,8 +12,8 @@ const Navigation = () => {
 const NavigationAuth = () => {
   return (
     <nav className='navigation'>
-      <ul>
-        <li>
+      <ul className='Navigation-list'>
+        <li className='Naavigation-element'>
           <NavLink to='/'>Landing</NavLink>
         </li>
         <li>
