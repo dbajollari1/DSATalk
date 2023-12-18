@@ -4,12 +4,15 @@ CS554 - Final Project
 ## How to run the application
  - First you must install docker, can be found here [https://docs.docker.com/desktop/install/mac-install/]
  - Also please note that the following has only been tested with a Macbook Pro using apple silicon
- - Next since this application is using redis, we need to run a dockerized version of it locally, this is handled in the docker compose file, but make sure to stop your local redis instance if running with docker
- - To run the application locally(without docker) you can pull the code from github, go into the frontend and run the command
- 1. `npm run dev`
- - Then you can go into the server folder and run the following command to populate the database with dummy data, and then run the server
+ - And since this application is using redis, we need to run a dockerized version of it locally, this is handled in the docker compose file, but make sure to stop your local redis instance if running with docker
+ - To run the application locally(without docker) you can pull the code from github using this command
+ `git clone git@github.com:dbajollari1/DSATalk.git` 
+  - Then you can go into the server folder and run the following command to populate the database with dummy data, and then run the server
 1. `npm run seed`
 2. `npm run start`
+ - Next go into the frontend and run the command
+ 1. `npm run dev`
+- When we submit the project we will supply the env file with the correct values, so there is no need to manually populate it
 
 ## Running it with docker
 1. First go to the server folder and run the following command to populate the database
