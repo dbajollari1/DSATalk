@@ -38,12 +38,12 @@ router
             }
 
             try { 
-                const checkD = await discussionData.get(req.params.discussionId); 
+                const checkD = await discussionData.get(req.params.id); 
             } catch (e){ 
                 return res.status(404).json({ error: e });
             }
-
-            const commentInfo = req.body;
+            const jsonData = JSON.parse(req.body.json_data);
+            const commentInfo = jsonData;
             try {
                 let discussionId = req.params.id;
                 let content = commentInfo.content;
@@ -58,7 +58,7 @@ router
 
                 const createdComment = await commentData.create(discussionId, userId, username, content);
 
-
+                console.log("Here")
                 const updatedDiscussion = await discussionData.get(discussionId);
                 //update the dicussion in redis
                 let searchKey = "discussion: " + discussionId;
@@ -130,12 +130,13 @@ router
             }
             try { 
                 const checkD = await discussionData.get(req.params.discussionId); 
+                console.log("Here")
                 const checkC = await commentData.get(req.params.commentId); 
             } catch (e){ 
                 return res.status(404).json({ error: e });
             }
-
-            const replyInfo = req.body;
+            const jsonData = JSON.parse(req.body.json_data);
+            const replyInfo = jsonData;
             try {
                 let discussionId = req.params.discussionId;
                 let commentId = req.params.commentId;
