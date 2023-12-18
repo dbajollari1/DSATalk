@@ -11,9 +11,9 @@ function Home() {
   const [loadingUser, setLoadingUser] = useState(true);
   const [hasReloaded, setHasReloaded] = useState(false);
 
-   if(displayName.length === 0){
-     setDisplayName(currentUser.displayName)
-   }
+  //  if(displayName.length === 0){
+  //    setDisplayName(currentUser.displayName)
+  //  }
   return (
         <div className='card'>
       <h2>
