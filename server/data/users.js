@@ -10,7 +10,7 @@ const findUserByEmail = async(email) =>{
   }
 
   const userCollection = await users();
-  const user = await userCollection.findOne({ email: email });
+    const user = await userCollection.findOne({ email: email });
   if(!user) throw "Error: Either the user does not exist";
 
   return user;
@@ -46,12 +46,8 @@ const createUserSignOnSyncUser = async (
   email,
   username
 ) => {
-  // console.log("inside user create")
-  // console.log("Email = ",email)
-  // console.log("Password = ",username)
+  email = email.toLowerCase();
   if(!email || !username) throw "Error: Not all neccessary fields passed to function!";
-
-  
   const userCollection = await users();
   const user = await userCollection.findOne({ email: email });
   if(user){
@@ -93,6 +89,7 @@ const createUserSignOn = async (
 
   
   const userCollection = await users();
+  email = email.toLowerCase()
   const user = await userCollection.findOne({ email: email });
   if(user) throw "Error: User already exists with that username!"; 
 
