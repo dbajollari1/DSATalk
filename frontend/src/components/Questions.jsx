@@ -14,6 +14,11 @@ function Questions(props) {
     const {currentUser} = useContext(AuthContext);
     const [visitedLinkColor, setVisitedLinkColor] = useState('rgb(0, 0, 226)');
     const [numberProblems, setNumberProblems ]  = useState(0)
+
+    if(props.results.length===0)
+    {
+      props.results=allQuestions
+    }
     useEffect(() => {
       setVisitedLinkColor('rgb(0, 0, 226)')
     }, [visitedLinkColor]);

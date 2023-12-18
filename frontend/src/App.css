@@ -102,13 +102,7 @@
 	color: red;
   }
   
-  .Search-and-filter{
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-		width: 100%;
-		height: auto;
-		padding: 20px;
-		background-color: #e7ebeb;
-  }
+  
   .button {
 	padding: 5px;
 	background-color: #282c34;
@@ -208,8 +202,8 @@
   /* for Search.jsx */
 
   .input-wrapper {
-    width: 40%;
-    height: 2.5rem;
+    width: 70%;
+    height: 2.0rem;
     border: none;
     border-radius: 10px;
     padding: 0 10px;
@@ -238,4 +232,56 @@
 
   .questions-container {
     width: 100%;
+  }
+
+/* 
+  .Search-and-filter{
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+		width: 100%;
+		height: auto;
+		padding: 20px;
+		background-color: #e7ebeb;
+  } */
+  .Search-and-filter {
+		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+		width: 100%;
+		height: auto;
+		/* padding: 20px; */
+		background-color: #e7ebeb;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		/* Adjust margin and padding as needed */
+		margin: 10px 0;
+		padding: 5px;
+  }
+  
+
+  .search-div, .filter-div {
+	flex: 1;
+	display: flex;
+  }
+  
+  .search-div {
+	/* Adjust width as needed */
+	width: 80%;
+  }
+  
+  .filter-div {
+	/* Adjust width as needed */
+	width: 100%;
+	align-items: center;
+  }
+  
+  .dropdown-difficulty, .dropdown-topics, .dropdown-company {
+	/* Remove unnecessary styles or adjust as needed */
+	border: 1px solid #ddd;
+	border-radius: 7px;
+	padding: 5px;
+  }
+  
+  .sec-center select {
+	margin-right: 1.0rem;
+	width: 30%;
+	align-items: center; 
   }

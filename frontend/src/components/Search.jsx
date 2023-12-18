@@ -5,10 +5,10 @@ import { useState, useContext } from "react";
 
  import "../App.css";
 
- const Search = ({ setResults }) => {
+ const Search = ({ setResults,setFilteredResults }) => {
     const {currentUser} = useContext(AuthContext);
    const [input, setInput] = useState("");
-    console.log(currentUser.accessToken)
+    // console.log(currentUser.accessToken)
    const headers = {
      'Authorization': `Bearer ${currentUser.accessToken}`, 
      'Content-Type': 'application/json',
@@ -34,6 +34,7 @@ import { useState, useContext } from "react";
        });
 
        setResults(results);
+       setDataResults(results);
      } catch (error) {
        console.error("Error fetching data:", error);
      }
