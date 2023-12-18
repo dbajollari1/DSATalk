@@ -56,12 +56,16 @@ function Discussion() {
             'Authorization': `Bearer ${currentUser.accessToken}`, 
             'Content-Type': 'application/json',
         };
-       
-        const res = await axios.post(`http://localhost:3000/discussions/${id}/likes`, {}, { headers });
+        const params = {
+            userId: curUser.data._id,
+        }
+        const res = await axios.post(`http://localhost:3000/discussions/${id}/likes`, params, { headers });
         console.log(res)
         setDiscussion(res.data);
-        // const response = await axios.get('http://localhost:3000/discussions', { headers });
-        // setDiscussion(response.data);
+        const response = await axios.get('http://localhost:3000/discussions', { headers });
+        setDiscussion(response.data);
+        window.location.reload();
+        
 
        }
          catch(e){

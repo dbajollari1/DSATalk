@@ -58,7 +58,6 @@ router
 
                 const createdComment = await commentData.create(discussionId, userId, username, content);
 
-                console.log("Here")
                 const updatedDiscussion = await discussionData.get(discussionId);
                 //update the dicussion in redis
                 let searchKey = "discussion: " + discussionId;

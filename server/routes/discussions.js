@@ -303,13 +303,14 @@ router
       }
 
       try {
-        const newDiscussion = await discussionData.addLike(req.params.id, req.session.user.id, req.session.user.username);
-        const updatedDiscussion = await discussionData.get(discussionId);
+        let userId = req.body.userId;
+        const newDiscussion = await discussionData.addLike(req.params.id, userId, req.user.name);
+        const updatedDiscussion = await discussionData.get(req.params.id);
         //update the dicussion in redis
-        let searchKey = "discussion: " + discussionId;
+        let searchKey = "discussion: " + req.params.id;
         const flatResult = JSON.stringify(updatedDiscussion);
         let setFlatResult = await redisClient.set(searchKey, flatResult);
-
+       
         await updateAllDiscussionsRedis
 
         return res.status(200).json(updatedDiscussion);
