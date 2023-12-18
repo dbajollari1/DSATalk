@@ -38,15 +38,15 @@ router
     .get(
         async (req, res) => {
             try {
-                let exists = await client.exists("questions");
+                let exists = await redisClient.exists("questions");
                 if (exists) {
-                    let problems = await client.get("questions");
+                    let problems = await redisClient.get("questions");
                     problems = JSON.parse(problems);
                     return res.json(problems);
                 }
                 const problems = await questionData.getAllQuestions();
                 const flatResult = JSON.stringify(problems);
-                let set = await client.set("questions", flatResult);
+                let set = await redisClient.set("questions", flatResult);
                 return res.json(problems);
             } catch (e) {
                 return res.status(500).json({ error: e });

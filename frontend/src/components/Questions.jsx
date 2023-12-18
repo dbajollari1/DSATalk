@@ -7,7 +7,9 @@ import '../App.css'
 import allQuestions from "../assets/questionsList.js";
 import axios from 'axios';
 
-function Questions() {
+function Questions(props) {
+  // console.log(props.results)
+  // console.log(typeof(results))
     const [checkedItems, setCheckedItems] = useState({});
     const {currentUser} = useContext(AuthContext);
     const [visitedLinkColor, setVisitedLinkColor] = useState('rgb(0, 0, 226)');
@@ -123,7 +125,7 @@ function Questions() {
         </div>
         )
     }
-    {allQuestions.map((question, index) => (
+    {props.results.map((question, index) => (
         <div className='question-container' key={index}>
         <input type='checkbox'
           checked={checkedItems[index] || false}
