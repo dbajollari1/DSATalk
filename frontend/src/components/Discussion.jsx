@@ -12,8 +12,21 @@ function Discussion() {
     const [discussion, setDiscussion] = useState([]);
     const [curUser, setCurUser] = useState('');
     const {currentUser} = useContext(AuthContext);
-    const [showAdd, setShowAddReplyForm] = useState(false);
     const [showAddCommentForm, setShowAddCommentForm] = useState(false);
+    const [showAddReplyForm, setShowAddReplyForm] = useState({});
+
+    const toggleAddReplyForm = (commentId) => {
+        setShowAddReplyForm((prevForms) => {
+            const updatedForms = { ...prevForms };
+    
+            // Toggle the value for the specific commentId
+            updatedForms[commentId] = !prevForms[commentId];
+    
+            return updatedForms;
+        });
+    };
+    
+    
     const { id } = useParams();
     const history = useNavigate();
 
@@ -75,11 +88,6 @@ function Discussion() {
         }
     }
     
-
-    const closeAddReplyForm = () => {
-        setShowAddReplyForm(false);
-    }
-
     const closeAddCommentForm = () => {
         setShowAddCommentForm(false);
     }
@@ -122,14 +130,14 @@ function Discussion() {
                                     <p>{reply.content}</p>
                                 </div>
                             ))}
-                            <button onClick={() => setShowAddReplyForm(!showAddReplyForm)}>Add Reply</button>
-                            {showAddReplyForm && (
+                            <button onClick={() => toggleAddReplyForm(comment._id)}>Add Reply</button>
+                            {showAddReplyForm[comment._id] && (
                                 <AddCommentAndReply
-                                    open={showAdd}
-                                    closeAddReplyForm={closeAddReplyForm}
+                                    open={true} 
+                                    closeAddReplyForm={() => toggleAddReplyForm(comment._id)}
                                     Id={discussion._id}
                                     commentId={comment._id}
-                                    handleClose={() => setShowAddReplyForm(!showAdd)}
+                                    handleClose={() => toggleAddReplyForm(comment._id)}
                                     reply={true}
                                 />
                             )}
