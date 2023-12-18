@@ -12,7 +12,29 @@
 	  animation: App-logo-spin infinite 20s linear;
 	}
   }
+
+  .button-signout {
+	background: #282c34;
+	color: white;
+	border: none; 
+	padding: 10px 15px;
+	font-size: inherit; 
+	cursor: pointer; 
+	transition: background-color 0.2s ease-in-out;
+  }
+
   
+  
+  .button-signout:hover {
+	background-color: #3a3f4b; 
+  }
+  
+  .button-signout.active {
+	font-weight: bold;
+	color: red;
+  }
+  
+
   .App-header {
 	background-color: #282c34;
 	height: 150px;
@@ -48,7 +70,7 @@
 		padding: 10px 15px; 
 		transition: background-color 0.2s ease-in-out;
   }
-    
+
   .navigation a:link,
   .navigation a:visited {
 	color: white;
