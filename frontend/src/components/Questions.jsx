@@ -11,7 +11,7 @@ function Questions() {
     const [checkedItems, setCheckedItems] = useState({});
     const {currentUser} = useContext(AuthContext);
     const [visitedLinkColor, setVisitedLinkColor] = useState('rgb(0, 0, 226)');
-
+    const [numberProblems, setNumberProblems ]  = useState(0)
     useEffect(() => {
       setVisitedLinkColor('rgb(0, 0, 226)')
     }, [visitedLinkColor]);
@@ -60,6 +60,8 @@ function Questions() {
         let updatedUser = await axios.put(`http://localhost:3000/users/addProblem/${curUser.data._id}`,reqData,{headers})
         if(updatedUser.status === 200){
         alert('User progress saved successfully');
+        let curUserUpdated = await axios.get(`http://localhost:3000/users/email/${emailId}`,{headers});
+        setNumberProblems(curUserUpdated.data.problems.length)
         }
         else{
           alert('Could not save preferences')
@@ -85,6 +87,7 @@ function Questions() {
                     initialCheckedItems[problemId] = true;
                 });
                 setCheckedItems(initialCheckedItems);
+                setNumberProblems(curUser.data.problems.length)
             } catch (error) {
                 console.error("Error fetching data", error);
             }
@@ -113,6 +116,13 @@ function Questions() {
   return (
     <div>
         <button onClick={handleSaveButtonClick}>Save question progress</button>
+        <br></br>
+        {currentUser &&   (
+          <div className='solved-problems'>
+        <p> You have solved {numberProblems} problems so far </p>
+        </div>
+        )
+    }
     {allQuestions.map((question, index) => (
         <div className='question-container' key={index}>
         <input type='checkbox'
