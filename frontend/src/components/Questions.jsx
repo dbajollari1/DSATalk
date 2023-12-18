@@ -7,11 +7,18 @@ import '../App.css'
 import allQuestions from "../assets/questionsList.js";
 import axios from 'axios';
 
-function Questions() {
+function Questions(props) {
+  // console.log(props.results)
+  // console.log(typeof(results))
     const [checkedItems, setCheckedItems] = useState({});
     const {currentUser} = useContext(AuthContext);
     const [visitedLinkColor, setVisitedLinkColor] = useState('rgb(0, 0, 226)');
     const [numberProblems, setNumberProblems ]  = useState(0)
+
+    if(props.results.length===0)
+    {
+      props.results=allQuestions
+    }
     useEffect(() => {
       setVisitedLinkColor('rgb(0, 0, 226)')
     }, [visitedLinkColor]);
@@ -123,7 +130,7 @@ function Questions() {
         </div>
         )
     }
-    {allQuestions.map((question, index) => (
+    {props.results.map((question, index) => (
         <div className='question-container' key={index}>
         <input type='checkbox'
           checked={checkedItems[index] || false}

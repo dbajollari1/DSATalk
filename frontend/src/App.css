@@ -12,7 +12,29 @@
 	  animation: App-logo-spin infinite 20s linear;
 	}
   }
+
+  .button-signout {
+	background: #282c34;
+	color: white;
+	border: none; 
+	padding: 10px 15px;
+	font-size: inherit; 
+	cursor: pointer; 
+	transition: background-color 0.2s ease-in-out;
+  }
+
   
+  
+  .button-signout:hover {
+	background-color: #3a3f4b; 
+  }
+  
+  .button-signout.active {
+	font-weight: bold;
+	color: red;
+  }
+  
+
   .App-header {
 	background-color: #282c34;
 	height: 150px;
@@ -45,10 +67,11 @@
 
   .navigation ul li {
 		display: inline-block; 
+		font-size: 20px;
 		padding: 10px 15px; 
 		transition: background-color 0.2s ease-in-out;
   }
-    
+
   .navigation a:link,
   .navigation a:visited {
 	color: white;
@@ -78,6 +101,7 @@
 	text-decoration: none;
 	color: red;
   }
+  
   
   .button {
 	padding: 5px;
@@ -114,7 +138,6 @@
 
 		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 		width: 100%;
-		margin: 10px auto 20px;
 		height: auto;
 		padding: 20px;
 
@@ -174,4 +197,91 @@
 .solved-problems {
 	font-weight: bold; 
 	color: #150b3f; 
+  }
+
+  /* for Search.jsx */
+
+  .input-wrapper {
+    width: 70%;
+    height: 2.0rem;
+    border: none;
+    border-radius: 10px;
+    padding: 0 10px;
+    box-shadow: 0px 0px 8px #ddd;
+    background-color: white;
+    display: flex;
+    align-items: center;
+  }
+  
+  .input-type-search {
+    background-color: transparent;
+    border: none;
+    height: 100%;
+    font-size: 1.25rem;
+    width: 100%;
+    margin-left: 5px;
+  }
+  
+  .input-type-search:focus {
+    outline: none;
+  }
+  
+  #search-icon {
+    color: royalblue;
+  }
+
+  .questions-container {
+    width: 100%;
+  }
+
+/* 
+  .Search-and-filter{
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+		width: 100%;
+		height: auto;
+		padding: 20px;
+		background-color: #e7ebeb;
+  } */
+  .Search-and-filter {
+		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+		width: 100%;
+		height: auto;
+		/* padding: 20px; */
+		background-color: #e7ebeb;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		/* Adjust margin and padding as needed */
+		margin: 10px 0;
+		padding: 5px;
+  }
+  
+
+  .search-div, .filter-div {
+	flex: 1;
+	display: flex;
+  }
+  
+  .search-div {
+	/* Adjust width as needed */
+	width: 80%;
+  }
+  
+  .filter-div {
+	/* Adjust width as needed */
+	width: 100%;
+	align-items: center;
+  }
+  
+  .dropdown-difficulty, .dropdown-topics, .dropdown-company {
+	/* Remove unnecessary styles or adjust as needed */
+	border: 1px solid #ddd;
+	border-radius: 7px;
+	padding: 5px;
+  }
+  
+  .sec-center select {
+	margin-right: 1.0rem;
+	width: 30%;
+	align-items: center; 
   }
