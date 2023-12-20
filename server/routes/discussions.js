@@ -223,7 +223,6 @@ router
         content = helpers.checkContent(content);
 
         userId = helpers.checkId(userId, "User ID");
-        //username = helpers.validateUsername(username);
         if (tags) {
         tags = helpers.checkTags(tags);
         } else {
@@ -247,7 +246,6 @@ router
         } else {
           url = ""
         }
-
 
         const createdDiscussion = await discussionData.create(discussionInfo.title, discussionInfo.userId, discussionInfo.username, discussionInfo.content, tags, discussionInfo.image, discussionInfo.url);
         await updateAllDiscussionsRedis
