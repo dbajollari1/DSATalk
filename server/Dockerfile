@@ -5,7 +5,6 @@ WORKDIR /usr/src/app
 
 ENV SERVER_URL='mongodb://host.docker.internal:27017/'
 ENV DATABASE='CS554-FinalProject-DSATalk'
-ENV LOCAL_IP="192.168.1.155"
 ENV REDIS_HOST="my-redis-service" 
 ENV REDIS_PORT="6379"
 ENV TYPE="service_account"
