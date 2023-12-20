@@ -1,4 +1,4 @@
-import React, {useContext,useState} from 'react';
+import React, {useContext,useEffect, useState} from 'react';
 import {AuthContext} from '../context/AuthContext';
 import {getAuth} from 'firebase/auth';
 
@@ -11,9 +11,13 @@ function Home() {
   const [loadingUser, setLoadingUser] = useState(true);
   const [hasReloaded, setHasReloaded] = useState(false);
 
-   if(displayName.length === 0){
-     setDisplayName(currentUser.displayName)
-   }
+  useEffect(() => {
+    if(displayName.length === 0){
+      setDisplayName(currentUser.displayName)
+    }
+  }, [currentUser]) 
+
+
   return (
         <div className='card'>
       <h2>
