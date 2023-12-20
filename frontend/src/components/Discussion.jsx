@@ -5,6 +5,9 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import AddCommentAndReply from './AddCommentAndReply'; 
+import { styled } from '@mui/system';
+import { Button, Typography, Card } from '@mui/material';
+
 
 
 
@@ -96,15 +99,49 @@ function Discussion() {
         setShowAddCommentForm(false);
     }
 
+    
+    const RootContainer = styled('div')({
+        padding: (theme) => theme.spacing(3),
+    });
+
+    const DiscussionContainer = styled('div')({
+        marginBottom: (theme) => theme.spacing(3),
+        padding: (theme) => theme.spacing(2),
+        border: '1px solid #ddd',
+        borderRadius: (theme) => theme.spacing(1),
+    });
+
+    const CommentContainer = styled('div')({
+        margin: (theme) => theme.spacing(2, 0),
+        padding: (theme) => theme.spacing(2),
+        border: '1px solid #eee',
+        borderRadius: (theme) => theme.spacing(1),
+    });
+
+    const ReplyContainer = styled('div')({
+        marginLeft: (theme) => theme.spacing(4),
+        marginBottom: (theme) => theme.spacing(2),
+        padding: (theme) => theme.spacing(2),
+        border: '1px solid #f0f0f0',
+        borderRadius: (theme) => theme.spacing(1),
+    });
+
+    const AddCommentButton = styled('div')({
+        margin: (theme) => theme.spacing(2, 0),
+    });
+
+    
+
 
     return (
-        <div>
+        <div className={RootContainer}>
+            <div className={DiscussionContainer}>
                 <h1>{discussion.title}</h1>
                 <h3>Posted By {discussion.user?.username}</h3> 
                 <p>{discussion.content}</p>
                 {discussion.image ? <img src={discussion.image} alt="discussion image" /> : null}
                 <h3>Likes: {discussion.likes?.length}</h3>
-                <button onClick={() => handleLike(discussion._id)}>Like</button>
+                <Button onClick={() => handleLike(discussion._id)} variant="outlined" className="AddCommentButton">Like</Button>
                 {curUser && curUser.data._id === discussion.user._id && (
                     <div className="delete-button">
                     <br></br>
@@ -113,9 +150,10 @@ function Discussion() {
                     </button>
                     </div>
                 )}
+            </div>
                 <div>
-                    <h3>Comments</h3>
-                    <button onClick={() => setShowAddCommentForm(!showAddCommentForm)}>Add Comment</button>
+                    <Typography variant="h5">Comments</Typography>
+                    <Button onClick={() => setShowAddCommentForm(!showAddCommentForm)} variant='outlined' className="AddCommentButton">Add Comment</Button>
                     {showAddCommentForm && (
                         <AddCommentAndReply
                             open={showAddCommentForm}
@@ -125,16 +163,16 @@ function Discussion() {
                         />
                     )}
                     {discussion.comments?.map((comment) => (
-                        <div key={comment._id}>
-                            <h4>{comment.authorUsername}</h4>
+                        <Card key={comment._id} className="CommentContainer">
+                            <h4>Commented By {comment.authorUsername}</h4>
                             <p>{comment.content}</p>
                             {comment.replies?.map((reply) => (
-                                <div key={reply._id}>
-                                    <h5>{reply.authorUsername}</h5>
+                                <Card key={reply._id} className="ReplyContainer">
+                                    <h5> Reply By {reply.authorUsername}</h5>
                                     <p>{reply.content}</p>
-                                </div>
+                                </Card>
                             ))}
-                            <button onClick={() => toggleAddReplyForm(comment._id)}>Add Reply</button>
+                            <Button onClick={() => toggleAddReplyForm(comment._id)} variant="outlined" >Add Reply</Button>
                             {showAddReplyForm[comment._id] && (
                                 <AddCommentAndReply
                                     open={true} 
@@ -145,7 +183,7 @@ function Discussion() {
                                     reply={true}
                                 />
                             )}
-                        </div>
+                        </Card>
                     ))}
                 </div>
         </div>
