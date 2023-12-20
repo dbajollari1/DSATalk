@@ -24,16 +24,16 @@ const create = async (
     //     tags = [];
     // }
     if(image) { 
-        image = "" //will change later
+        image = helpers.checkURL(image)
     } else { 
         image = ""
     }
+    
     if (url) { 
         url = helpers.checkURL(url); 
     } else { 
         url = ""
     }
-    image = "" //for now always set image to empty will need to configure s3 bucket later
 
     const userCollection = await users();
     const userCheck1 = await userCollection.findOne({ username: username });
@@ -53,7 +53,7 @@ const create = async (
         user: user, 
         content: content, 
         tags: tags,
-        image: "", 
+        image: image, 
         url: url,
         timestamp: timestamp,
         likes: likes,

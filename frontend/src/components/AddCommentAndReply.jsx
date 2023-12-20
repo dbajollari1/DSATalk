@@ -44,8 +44,8 @@ function AddCommentAndReply({ open, handleClose, closeAddCommentForm, Id, reply,
           alert(`Error: this is not a valid value for content it only contains digits`);
           return
         }
-        if (content.length < 50){
-           alert(`Error: content length must be greater than or equal to 50 characters`);
+        if (content.length < 20){
+           alert(`Error: content length must be greater than or equal to 10 characters`);
            return
           }
         return content

@@ -247,7 +247,7 @@ router
           url = ""
         }
 
-        const createdDiscussion = await discussionData.create(discussionInfo.title, discussionInfo.userId, discussionInfo.username, discussionInfo.content, tags, discussionInfo.image, discussionInfo.url);
+        const createdDiscussion = await discussionData.create(discussionInfo.title, discussionInfo.userId, discussionInfo.username, discussionInfo.content, tags, image, discussionInfo.url);
         await updateAllDiscussionsRedis
         return res.status(200).json(createdDiscussion);
       } catch (e) {

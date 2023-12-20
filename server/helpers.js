@@ -116,8 +116,8 @@ export const validateName = (name) => {
       throw `Error: content cannot be an empty string or string with just spaces`;
     if (!isNaN(content))
       throw `Error: this is not a valid value for content it only contains digits`;
-    if (content.length < 50)
-      throw `Error: content length must be greater than or equal to 50 characters`;
+    if (content.length < 20)
+      throw `Error: content length must be greater than or equal to 20 characters`;
     return content
   }
 
