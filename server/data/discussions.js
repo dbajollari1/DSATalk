@@ -228,7 +228,7 @@ const addLike = async (
     if (!discussionId || !userId || !username) throw "Error: All fields need to have valid values!";
     discussionId = helpers.checkId(discussionId, "Discussion ID");
     userId = helpers.checkId(userId, "userId");
-    username = helpers.validateUsername(username,"username");
+    //username = helpers.validateUsername(username,"username");
 
     const userCollection = await users();
     const userCheck1 = await userCollection.findOne({ username: username });
