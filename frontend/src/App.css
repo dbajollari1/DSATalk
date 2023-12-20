@@ -285,3 +285,7 @@
 	width: 30%;
 	align-items: center; 
   }
+
+  .discussion-title a:hover {
+	color: #333aff;
+  }
