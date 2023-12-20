@@ -4,6 +4,8 @@ import {AuthContext} from '../context/AuthContext';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import '../App.css'; // Import the CSS file
 import AddDiscussionDialog from './AddDiscussionDialog';
+import Error from './Error';
+
 function DiscussionsPage() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -12,6 +14,9 @@ function DiscussionsPage() {
   const {currentUser} = useContext(AuthContext);
   const [curUser, setCurUser] = useState('')
   const [deleteMessage, setDeleteMessage] = useState('');
+  const [error, setError] = useState(false);
+  const [errorCode, setErrorCode] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const fetchDiscussions = async () => {
@@ -26,6 +31,9 @@ function DiscussionsPage() {
         setDiscussions(response.data);
       } catch (error) {
         console.error('Error fetching discussion data', error);
+        setError(true);
+        setErrorCode(error.response ? error.response.status : 'unknown'); // Set the error code
+        setErrorMessage(error.message);
       }
     };
 
@@ -49,10 +57,15 @@ function DiscussionsPage() {
       
     } catch (error) {
       console.error('Error deleting discussion', error);
+
     }
   };
   return (
     <div>
+      {error ? (
+       <Error errorCode={errorCode} message={errorMessage} />
+      ): (
+        <>
       <h1>Welcome to the Discussions page!</h1>
       <button onClick={() => setShowAddForm(!showAddForm)}>Create Discussion</button>
       <br/>
@@ -95,6 +108,8 @@ function DiscussionsPage() {
 ))}
 
       </div>
+      </>
+     )}
     </div>
   );
 }
