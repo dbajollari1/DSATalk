@@ -56,11 +56,11 @@ REDIS_HOST: 127.0.0.1
 <br>
 REDIS_PORT: 6379
 <br>
-TYPE: service_account
+TYPE: 
 <br>
-PROJECT_ID: dsatalks-b8533
+PROJECT_ID: 
 <br>
-PRIVATE_KEY_ID: f8d716833fb1631670f9c0ded84a380bcd25b235
+PRIVATE_KEY_ID: 
 <br>
 PRIVATE_KEY: 
 <br>
@@ -97,9 +97,9 @@ ENV REDIS_HOST="my-redis-service"
 <br>
 ENV REDIS_PORT="6379"
 <br>
-ENV TYPE="service_account"
+ENV TYPE=""
 <br>
-ENV PROJECT_ID="dsatalks-b8533"
+ENV PROJECT_ID=""
 <br>
 ENV PRIVATE_KEY_ID=""
 <br>
