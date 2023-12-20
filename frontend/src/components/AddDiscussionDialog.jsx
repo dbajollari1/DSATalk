@@ -29,12 +29,12 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
     url: ''
   });
 
-  const [selectedFile, setSelectedFile] = useState('');
+  const [selectedFile, setSelectedFile] = useState();
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file && file.type.startsWith('image/')) {
-      setSelectedFile(file.name);
+      setSelectedFile(file);
     } else {
       alert('Please select a valid image file to upload.');
     }
