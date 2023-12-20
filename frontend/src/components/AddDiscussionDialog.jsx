@@ -29,11 +29,21 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
     url: ''
   });
 
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState('');
 
   const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      setSelectedFile(file.name);
+    } else {
+      alert('Please select a valid image file to upload.');
+    }
   };
+
+  const triggerFileSelect = () => {
+    document.getElementById('hidden-file-input').click();
+  };
+
 
   const handleDiscussionCompletion = (data) => {
     setSuccessDialogOpen(true);
@@ -198,6 +208,7 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
   
   };
 
+  
 
 
  
@@ -239,23 +250,24 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
 <br/> 
         
         <TextField
-          id="outlined-basic"
-          label="image:"
-          variant="outlined"
-          name="image"
-          onChange={handleValueChange}
-          value={discussionDetails.image}
-        />
-<br/> 
-<input
-          accept="image/*"
-          
-          id="upload-file"
-          type="file"
-          onChange={handleFileChange}
-        />
-
-        
+        fullWidth
+        label="Click to upload image"
+        variant="outlined"
+        value={selectedFile}
+        onClick={triggerFileSelect}
+        InputProps={{
+          readOnly: true,
+        }}
+      />
+      <input
+        type="file"
+        accept="image/*"
+        id="hidden-file-input"
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+      />
+      <br/>
+      
         <TextField
           id="outlined-basic"
           label="url:"

@@ -5,7 +5,7 @@ import { useState, useContext } from "react";
 
  import "../App.css";
 
- const Search = ({ setResults,setFilteredResults }) => {
+ const Search = ({ setResults,setDataResults }) => {
     const {currentUser} = useContext(AuthContext);
    const [input, setInput] = useState("");
     // console.log(currentUser.accessToken)
