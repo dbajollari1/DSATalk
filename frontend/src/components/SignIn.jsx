@@ -48,7 +48,7 @@ function SignIn() {
     <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
     <Card style={{ padding: '2rem', width: '100%', maxWidth: '400px' }}>
       <CardContent>
-        <Typography variant="h5" component="h2" gutterBottom>
+        <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 'bold' }}>
           Log-In
         </Typography>
         <form onSubmit={handleLogin}>
@@ -62,7 +62,7 @@ function SignIn() {
             fullWidth
             required
             autoFocus
-            error={!!error} // Show error state if there is an error
+            error={!!error} 
           />
           <TextField
             name='password'
@@ -72,18 +72,18 @@ function SignIn() {
             margin='normal'
             fullWidth
             required
-            error={!!error} // Show error state if there is an error
+            error={!!error} 
           />
-          {error && <FormHelperText error>{error}</FormHelperText>} {/* Display error message */}
+          {error && <FormHelperText error style={{ textAlign: 'center', fontSize: '1rem' }}>{error}</FormHelperText>} 
           <Button
             type='submit'
             color='primary'
             variant='contained'
             fullWidth
-            style={{ backgroundColor: 'rgb(5, 30, 52)', // Bluish-black color
-            color: 'white', // White text color
+            style={{ backgroundColor: 'rgb(5, 30, 52)', 
+            color: 'white', 
             '&:hover': {
-              backgroundColor: 'rgba(5, 30, 52, 0.8)', // Slightly lighter on hover
+              backgroundColor: 'rgba(5, 30, 52, 0.8)', 
             },marginTop: '1rem' }}
           >
             Log in

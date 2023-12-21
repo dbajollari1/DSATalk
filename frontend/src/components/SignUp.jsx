@@ -3,25 +3,29 @@ import {Navigate} from 'react-router-dom';
 import {doCreateUserWithEmailAndPassword} from '../firebase/FirebaseFunctions';
 import {AuthContext} from '../context/AuthContext';
 import SocialSignIn from './SocialSignIn';
+import { Card, CardContent, TextField, Button, Typography, FormHelperText } from '@mui/material';
+
 function SignUp() {
   const {currentUser,displayName,  setDisplayName} = useContext(AuthContext);
+  const [error, setError] = useState('');
   const [pwMatch, setPwMatch] = useState('');
      const handleSignUp = async (e) => {
     e.preventDefault();
     const {email, passwordOne, passwordTwo} = e.target.elements;
+    setError(''); 
+    setPwMatch('');
     if (passwordOne.value !== passwordTwo.value) {
       setPwMatch('Passwords do not match');
       return false;
     }
-
     try {
       await doCreateUserWithEmailAndPassword(
-        email.value,
+        email.value.toLowerCase(),
         passwordOne.value,
         displayName
       );
     } catch (error) {
-      alert(error);
+      setError('An error occurred during sign up. Please try again.');
     }
   };
 
@@ -30,80 +34,76 @@ function SignUp() {
   }
  
   return (
-    <div className='card'>
-      <h1>Sign up</h1>
-      {pwMatch && <h4 className='error'>{pwMatch}</h4>}
-      <form onSubmit={handleSignUp}>
-        <div className='form-group'>
-          <label>
-            Name:
-            <br />
-            <input
-              className='form-control'
+    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
+      <Card style={{ padding: '2rem', width: '100%', maxWidth: '500px' }}>
+        <CardContent>
+          <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 'bold' }}>
+            Sign Up
+          </Typography>
+          <form onSubmit={handleSignUp}>
+            <TextField
               required
+              autoFocus
               name='displayName'
+              label='Name'
               type='text'
               placeholder='Name'
-              autoFocus={true}
+              fullWidth
+              margin='normal'
               onChange={(e) => {
                 setDisplayName(e.target.value);
               }}
             />
-          </label>
-        </div>
-        <div className='form-group'>
-          <label>
-            Email:
-            <br />
-            <input
-              className='form-control'
+            <TextField
               required
               name='email'
+              label='Email'
               type='email'
               placeholder='Email'
+              fullWidth
+              margin='normal'
             />
-          </label>
-        </div>
-        <div className='form-group'>
-          <label>
-            Password:
-            <br />
-            <input
-              className='form-control'
+            <TextField
+              required
               id='passwordOne'
               name='passwordOne'
+              label='Password'
               type='password'
               placeholder='Password'
               autoComplete='off'
-              required
+              fullWidth
+              margin='normal'
             />
-          </label>
-        </div>
-        <div className='form-group'>
-          <label>
-            Confirm Password:
-            <br />
-            <input
-              className='form-control'
+            <TextField
+              required
               name='passwordTwo'
+              label='Confirm Password'
               type='password'
               placeholder='Confirm Password'
               autoComplete='off'
-              required
+              fullWidth
+              margin='normal'
             />
-          </label>
-        </div>
-        <button
-          className='button'
-          id='submitButton'
-          name='submitButton'
-          type='submit'
-        >
-          Sign Up
-        </button>
-      </form>
-      <br />
-      <SocialSignIn />
+            {pwMatch && <FormHelperText error style={{ marginBottom: '1rem', textAlign: 'center', fontSize: '1rem'}}>{pwMatch}</FormHelperText>}
+            {error && <FormHelperText error style={{ textAlign: 'center', fontSize: '1rem' }}>{error}</FormHelperText>}
+            <Button
+              variant='contained'
+              color='primary'
+              type='submit'
+              fullWidth
+              style={{ backgroundColor: 'rgb(5, 30, 52)', 
+              color: 'white',
+              '&:hover': {
+              backgroundColor: 'rgba(5, 30, 52, 0.8)', 
+            },marginTop: '1rem' }}
+            >
+              Sign Up
+            </Button>
+          </form>
+          <br/>
+          <SocialSignIn />
+        </CardContent>
+      </Card>
     </div>
   );
 }
