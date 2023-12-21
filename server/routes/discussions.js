@@ -9,13 +9,14 @@ import { users } from '../config/mongoCollections.js';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
+// code to deal with s3 bucket adapted from https://abbaslanbay.medium.com/uploading-files-to-aws-s3-with-multer-and-the-node-js-aws-sdk-7cad8dc87fc2
+// and https://dev.to/paras594/upload-images-to-aws-s3-using-multer-in-nodejs-1164
+
 import { createClient } from 'redis';
 const redisClient = createClient({ url: 'redis://' + process.env.REDIS_HOST + ":" + process.env.REDIS_PORT });
 redisClient.connect().then(() => { });
 
 
-// code to deal with s3 bucket adapted from https://abbaslanbay.medium.com/uploading-files-to-aws-s3-with-multer-and-the-node-js-aws-sdk-7cad8dc87fc2
-// and https://dev.to/paras594/upload-images-to-aws-s3-using-multer-in-nodejs-1164
 
 AWS.config.update({
   accessKeyId: process.env.ACCESS_KEY,
