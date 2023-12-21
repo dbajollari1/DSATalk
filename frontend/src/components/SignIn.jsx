@@ -33,7 +33,7 @@ function SignIn() {
     }
   };
   if (currentUser) {
-    return <Navigate to='/home' />;
+    return <Navigate to='/' />;
   }
   return (
     <div>

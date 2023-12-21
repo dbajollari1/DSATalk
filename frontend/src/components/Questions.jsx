@@ -89,7 +89,8 @@ function Questions(props) {
                   'Content-Type': 'application/json',
                 };
                 let emailId = currentUser.email;
-                let curUser = await axios.get(`http://localhost:3000/users/email/${emailId}`,{headers});                const initialCheckedItems = {};
+                let curUser = await axios.get(`http://localhost:3000/users/email/${emailId}`,{headers});                
+                const initialCheckedItems = {};
                 curUser.data.problems.forEach((problemId) => {
                     initialCheckedItems[problemId] = true;
                 });
