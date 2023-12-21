@@ -94,5 +94,17 @@ router
         }
     });
 
+router
+.route('/')
+.get(
+    async (req, res) => {
+        try {
+            const users = await userData.getAllUsers();
+            return res.json(users);
+        } catch (e) {
+            return res.status(500).json({ error: e });
+        }
+    });
+
 
 export default router;

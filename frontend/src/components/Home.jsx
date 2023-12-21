@@ -3,6 +3,7 @@ import {AuthContext} from '../context/AuthContext';
 import {getAuth} from 'firebase/auth';
 
 import '../App.css';
+import Leaderboard from './Leaderboard';
 
 function Home() {
   const { currentUser, displayName, setDisplayName} = useContext(AuthContext);
@@ -21,9 +22,11 @@ function Home() {
   return (
         <div className='card'>
       <h2>
-        Hello {currentUser && displayName }, this is the Protected
-        Home page
+        Hello {currentUser && displayName}!
       </h2>
+      <div className='leaderboard'>
+        <Leaderboard></Leaderboard>
+      </div>
     </div>
   );
 }

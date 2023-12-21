@@ -117,4 +117,17 @@ const createUserSignOn = async (
   return returnObj;
 };
 
-export default {findUserByEmail,updateUserProbelms,findUserById,createUserSignOn,createUserSignOnSyncUser}; 
+const getAllUsers = async () => {
+  const userCollection = await users();
+  let allUsers = await userCollection.find({}).toArray();
+  if (allUsers.length === 0) {
+      throw { statusCode: 404, error: "No Users in the Database" };
+  }
+  allUsers.forEach((element) => {
+      element._id = element._id.toString();
+  });
+  return allUsers;
+  };
+
+
+export default {findUserByEmail,updateUserProbelms,findUserById,createUserSignOn,createUserSignOnSyncUser,getAllUsers}; 
