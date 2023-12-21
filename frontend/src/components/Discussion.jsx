@@ -42,7 +42,6 @@ function Discussion() {
             };
             const res = await axios.get(`http://localhost:3000/discussions/discussion/${id}`, {headers});
             setDiscussion(res.data);
-            console.log("here")
             const curUser = await axios.get(`http://localhost:3000/users/email/${currentUser.email}`,{headers})
             setCurUser(curUser)
         }
