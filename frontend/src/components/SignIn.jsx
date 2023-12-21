@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import SocialSignIn from './SocialSignIn';
 import {Navigate} from 'react-router-dom';
 import {AuthContext} from '../context/AuthContext';
@@ -6,83 +6,102 @@ import {
   doSignInWithEmailAndPassword,
   doPasswordReset
 } from '../firebase/FirebaseFunctions';
+import { Card, CardContent, TextField, Button, Typography, FormHelperText } from '@mui/material';
+
 
 function SignIn() {
   const {currentUser} = useContext(AuthContext);
+  const [error, setError] = useState('');
+
   const handleLogin = async (event) => {
     event.preventDefault();
     let {email, password} = event.target.elements;
+    setError(''); 
+    const emailValue = email.value.toLowerCase();
+    const passwordValue = password.value;
 
     try {
-      await doSignInWithEmailAndPassword(email.value, password.value);
+      await doSignInWithEmailAndPassword(emailValue, passwordValue);
     } catch (error) {
-      alert(error);
+      setError('Failed to log in. Please check your email and password.');
     }
   };
-
+  
   const passwordReset = (event) => {
     event.preventDefault();
-    let email = document.getElementById('email').value;
+    let email = document.getElementById('email').value.toLowerCase();;
     if (email) {
-      doPasswordReset(email);
-      alert('Password reset email was sent');
-    } else {
-      alert(
-        'Please enter an email address below before you click the forgot password link'
-      );
+      try {
+        doPasswordReset(email);
+        setError('Password reset email has been sent. Please check your inbox.');
+      } catch (error) {
+        setError('Failed to send password reset email. Please check the email provided.');
+    } 
+  }else {
+      setError('Please enter an email address to reset your password.'); 
     }
   };
   if (currentUser) {
     return <Navigate to='/' />;
   }
   return (
-    <div>
-      <div className='card'>
-        <h1>Log-In</h1>
-        <form className='form' onSubmit={handleLogin}>
-          <div className='form-group'>
-            <label>
-              Email Address:
-              <br />
-              <input
-                name='email'
-                id='email'
-                type='email'
-                placeholder='Email'
-                required
-                autoFocus={true}
-              />
-            </label>
-          </div>
-          <br />
-          <div className='form-group'>
-            <label>
-              Password:
-              <br />
-              <input
-                name='password'
-                type='password'
-                placeholder='Password'
-                autoComplete='off'
-                required
-              />
-            </label>
-          </div>
-
-          <button className='button' type='submit'>
+    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
+    <Card style={{ padding: '2rem', width: '100%', maxWidth: '400px' }}>
+      <CardContent>
+        <Typography variant="h5" component="h2" gutterBottom>
+          Log-In
+        </Typography>
+        <form onSubmit={handleLogin}>
+          <TextField
+            name='email'
+            id='email'
+            type='email'
+            label='Email Address'
+            variant='outlined'
+            margin='normal'
+            fullWidth
+            required
+            autoFocus
+            error={!!error} // Show error state if there is an error
+          />
+          <TextField
+            name='password'
+            type='password'
+            label='Password'
+            variant='outlined'
+            margin='normal'
+            fullWidth
+            required
+            error={!!error} // Show error state if there is an error
+          />
+          {error && <FormHelperText error>{error}</FormHelperText>} {/* Display error message */}
+          <Button
+            type='submit'
+            color='primary'
+            variant='contained'
+            fullWidth
+            style={{ backgroundColor: 'rgb(5, 30, 52)', // Bluish-black color
+            color: 'white', // White text color
+            '&:hover': {
+              backgroundColor: 'rgba(5, 30, 52, 0.8)', // Slightly lighter on hover
+            },marginTop: '1rem' }}
+          >
             Log in
-          </button>
-
-          <button className='forgotPassword' onClick={passwordReset}>
+          </Button>
+          <Button
+            color='secondary'
+            fullWidth
+            style={{ marginTop: '1rem' }}
+            onClick={passwordReset}
+          >
             Forgot Password
-          </button>
+          </Button>
         </form>
-
-        <br />
         <SocialSignIn />
-      </div>
-    </div>
-  );
+      </CardContent>
+    </Card>
+  </div>
+);
 }
 
 export default SignIn;
