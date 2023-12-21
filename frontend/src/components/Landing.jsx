@@ -33,7 +33,7 @@ function Landing() {
     
        
       <h1> Welcome to DSAtalk!</h1>
-      <p> list of blind 75 questions </p>
+      <h2> List of blind 75 questions </h2>
       {currentUser
           ? (dataresults.length > 0 ? (
             <Questions results={dataresults} />
