@@ -214,7 +214,7 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
  
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="sx">
+    <Dialog open={open} onClose={handleClose} maxWidth="lg">
       <DialogTitle>Add New Discussion</DialogTitle>
       <DialogContent>
         <TextField
@@ -226,6 +226,7 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
           value={discussionDetails.title}
         />
         <br/> 
+        <br/>
         
         <TextField
           id="outlined-basic"
@@ -235,7 +236,7 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
           onChange={handleValueChange}
           value={discussionDetails.content}
         />
-
+<br/>
 <br/> 
         
         <TextField
@@ -246,7 +247,7 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
           onChange={handleValueChange}
           value={discussionDetails.tags}
         />
-
+<br/>
 <br/> 
         
         <TextField
@@ -266,6 +267,7 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
         style={{ display: 'none' }}
         onChange={handleFileChange}
       />
+      <br/>
       <br/>
       
         <TextField
