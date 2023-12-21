@@ -3,6 +3,7 @@ import { useState, useContext, useEffect } from 'react'
 import viteLogo from '/vite.svg'
 import {AuthContext} from '../context/AuthContext';
 import '../App.css'
+import { Checkbox, Button, Typography, Paper } from '@mui/material';
 
 import allQuestions from "../assets/questionsList.js";
 import axios from 'axios';
@@ -123,29 +124,30 @@ function Questions(props) {
 
   return (
     <div>
-        <button onClick={handleSaveButtonClick}>Save question progress</button>
-        <br></br>
-        {currentUser &&   (
-          <div className='solved-problems'>
-        <p> You have solved {numberProblems} problems so far </p>
-        </div>
-        )
-    }
-    {props.results.map((question, index) => (
-        <div className='question-container' key={index}>
-        <input type='checkbox'
-          checked={checkedItems[index] || false}
-          onChange={() => handleCheckboxChange(index)}
-        />
-      <div className='question' key={index}>
-        
-        <a href={question.link} target='_blank' rel='noopener noreferrer' style={{ color: visitedLinkColor }}>
-          <h4>{question.title}</h4>
-        </a>
-      </div>
-      </div>
-    ))}
-  </div>
+      <Button variant="contained" color="primary" onClick={handleSaveButtonClick}>
+        Save question progress
+      </Button>
+      <br /><br />
+      {currentUser && (
+        <Typography variant="subtitle1" gutterBottom>
+          You have solved {numberProblems} problems so far
+        </Typography>
+      )}
+      {props.results.map((question, index) => (
+        <Paper className='question-container' key={index} elevation={2}>
+          <Checkbox
+            checked={checkedItems[index] || false}
+            onChange={() => handleCheckboxChange(index)}
+            color="primary"
+          />
+          <Typography variant="h6" component="div">
+            <a href={question.link} target='_blank' rel='noopener noreferrer' style={{ color: visitedLinkColor, textDecoration: 'none' }}>
+              {question.title}
+            </a>
+          </Typography>
+        </Paper>
+      ))}
+    </div>
   )
 }
 

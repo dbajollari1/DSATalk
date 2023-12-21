@@ -30,11 +30,13 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
   });
 
   const [selectedFile, setSelectedFile] = useState();
+  const [selectedFileName, setSelectedFileName] = useState('');
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file && file.type.startsWith('image/')) {
       setSelectedFile(file);
+      setSelectedFileName(file.name);
     } else {
       alert('Please select a valid image file to upload.');
     }
@@ -254,7 +256,7 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
         fullWidth
         label="Click to upload image"
         variant="outlined"
-        value={selectedFile}
+        value={selectedFileName}
         onClick={triggerFileSelect}
         InputProps={{
           readOnly: true,

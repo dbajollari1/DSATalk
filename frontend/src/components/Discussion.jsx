@@ -130,7 +130,7 @@ function Discussion() {
                 <h1>{discussion.title}</h1>
                 <h3>Posted By {discussion.user?.username}</h3> 
                 <p>{discussion.content}</p>
-                {discussion.image ? <img src={discussion.image} alt="discussion image" /> : null}
+                {discussion.image ? <img src={discussion.image} alt="discussion image"  style={{ maxWidth: '500px', height: 'auto' }}/> : null}
                 <h3>Likes: {discussion.likes?.length}</h3>
                 <Button onClick={() => handleLike(discussion._id)} variant="outlined" style={AddCommentButton}>Like</Button>
                 {curUser && curUser.data._id === discussion.user._id && (
