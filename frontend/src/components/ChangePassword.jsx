@@ -27,13 +27,13 @@ function ChangePassword() {
         currentPassword.value,
         newPasswordOne.value
       );
-      alert('Password has been changed, you will now be logged out');
+      alert('Password has been changed');
       
     } catch (error) {
       setError('Failed to change password. Please ensure your current password is correct.');
     }
   };
-
+  
   if (currentUser.providerData[0].providerId === 'password') {
     return (
       <div>
@@ -83,6 +83,7 @@ function ChangePassword() {
             },marginTop: '1rem' }}>
             Change Password
           </Button>
+          
           
         </form>
       </div>

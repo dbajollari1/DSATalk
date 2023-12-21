@@ -27,7 +27,7 @@ async function doChangePassword(email, oldPassword, newPassword) {
   await reauthenticateWithCredential(auth.currentUser, credential);
 
   await updatePassword(auth.currentUser, newPassword);
-  await doSignOut();
+  //await doSignOut();
 }
 
 async function doSignInWithEmailAndPassword(email, password) {
@@ -47,10 +47,13 @@ async function doPasswordReset(email) {
   await sendPasswordResetEmail(auth, email);
 }
 
-async function doSignOut() {
+async function doSignOut(navigate) {
   try{
     let auth = getAuth();
+    
     await auth.signOut();
+    navigate('/'); // Redirect to the home page
+
     window.location.reload();
 
   }catch(error){

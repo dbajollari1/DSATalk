@@ -1,11 +1,12 @@
 import {React, useState} from 'react';
 import {doSignOut} from '../firebase/FirebaseFunctions';
 import '../App.css';
+import { useNavigate } from 'react-router-dom';
 
 const SignOutButton = () => {
-
+  const navigate = useNavigate();
   const handleSignOut = async () => {
-    await doSignOut();
+    await doSignOut(navigate);
   };
 
   return (
