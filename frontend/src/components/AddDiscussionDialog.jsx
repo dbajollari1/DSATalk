@@ -220,7 +220,7 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
       <DialogTitle>Add New Discussion</DialogTitle>
       <DialogContent>
         <TextField
-          id="outlined-basic"
+          id="new-discussion-btn"
           label="Title:"
           variant="outlined"
           name="title"
@@ -231,7 +231,7 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
         <br/>
         
         <TextField
-          id="outlined-basic"
+          id="content-field"
           label="content:"
           variant="outlined"
           name="content"
@@ -242,7 +242,7 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
 <br/> 
         
         <TextField
-          id="outlined-basic"
+          id="tags-field"
           label="Enter a comma-separated list of values"
           variant="outlined"
           name="tags"
@@ -254,6 +254,7 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
         
         <TextField
         fullWidth
+        id="image-field"
         label="Click to upload image"
         variant="outlined"
         value={selectedFileName}
@@ -273,7 +274,7 @@ const AddDiscussionDialog = ({ open, handleClose, closeAddFormState }) => {
       <br/>
       
         <TextField
-          id="outlined-basic"
+          id="url-field"
           label="url:"
           variant="outlined"
           name="url"
