@@ -8,26 +8,18 @@ import { useState, useContext } from "react";
  const Search = ({ setResults,setDataResults }) => {
     const {currentUser} = useContext(AuthContext);
    const [input, setInput] = useState("");
-    // console.log(currentUser.accessToken)
    const headers = {
      'Authorization': `Bearer ${currentUser.accessToken}`, 
      'Content-Type': 'application/json',
    }
 
- //   console.log(currentUser.accessToken)
    const fetchData = async (value) => {
      try {
      console.log("Getting the data from mongo")
-     console.log(value)
        const response = await axios.get("http://localhost:3000/questions", { headers });
-     //   console.log(response.data)
        const data_value = response.data;
-       console.log(value.toLowerCase())
        const results = data_value.filter((data) => {
-         // console.log(data.length)
-         console.log(data)
          return (
-             // console.log(data)
            data.title &&
            data.title.toLowerCase().includes(value.toLowerCase())
          );

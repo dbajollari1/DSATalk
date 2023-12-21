@@ -30,7 +30,6 @@ function Landing() {
         </div>
       )}
     <div className='card'>
-      {console.log(typeof(results))}
     
        
       <h1> Welcome to DSAtalk!</h1>

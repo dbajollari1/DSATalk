@@ -11,7 +11,7 @@ function ChangePassword() {
   const [pwMatch, setPwMatch] = useState('');
   const [error, setError] = useState('');
   const [isPasswordSet, setPassword] = useState(false) 
-  console.log(currentUser);
+
 
   const submitForm = async (event) => {
     event.preventDefault();

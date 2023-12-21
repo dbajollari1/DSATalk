@@ -22,12 +22,10 @@ const Filters = ({setDataResults,results}) => {
     // Apply filters
     const applyFilters = () => {
       let updatedList = [...results];
-      console.log(results)
   
       // Company Filter
       if (selectedCompany && selectedCompany !== 'select') {
         updatedList = updatedList.filter((item) => {
-          console.log(item)
           if(item.companies){
             for (const company of item.companies) {
               if (company.toLowerCase() === selectedCompany.toLowerCase()) {
@@ -38,21 +36,18 @@ const Filters = ({setDataResults,results}) => {
           return false;
         });
       }
-    console.log(updatedList)
       // Difficulty Filter
       if (selectedDifficulty && selectedDifficulty !== 'select') {
         updatedList = updatedList.filter(
           (item) => item.difficulty.toLowerCase() === selectedDifficulty.toLowerCase()
         );
       }
-      console.log(updatedList)
   
       // Topics Filter
 
       if (selectedTopics && selectedTopics !== 'select') {
         updatedList = updatedList.filter((item) => {
           if(item.tags){
-            console.log(item)
             for (const topic of item.tags) {
               if (topic.toLowerCase() === selectedTopics.toLowerCase()) {
                 return true;
@@ -73,16 +68,11 @@ const Filters = ({setDataResults,results}) => {
       }
       // Update results with the filtered list
 
-
-      console.log(updatedList);
     };
   
     // React to changes in the filter values or the search input
     useEffect(() => {
       applyFilters();
-      console.log(selectedCompany)
-      console.log(selectedDifficulty)
-      console.log(selectedTopics)
     }, [selectedCompany,selectedTopics,selectedDifficulty]);
  
   
