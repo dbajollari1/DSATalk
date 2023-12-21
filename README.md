@@ -25,7 +25,8 @@ CS554 - Final Project
     ```docker-compose down```
 5. If you ever want to get details about the current running docker containers you can use the following command. You can also see the running containers in the Docker VSCode extension or the desktop app  <br>
     ```docker-compose ps```
-6. Important note: When running the application in docker container navigate to the env file and make sure the value for REDIS_HOST is my-redis-service. This will tell the application that we are running redis from the docker container. If you would like the run on your local machine have the value be 127.0.0.1
+6. ***Important note***: When running the application in docker container navigate to the env file and make sure the value for REDIS_HOST is my-redis-service. This will tell the application that we are running redis from the docker container. If you would like the run on your local machine have the value be 127.0.0.1
+7. ***Important note***: If you would like to rerun the application using Docker make sure to run the docker-compose down command, and then delete the old docker containers. You should then be able to run it again
 
 - The code for the docker compose file was adapted from the following sources
     1. [https://chadsmith-software.medium.com/docker-service-inter-communication-setting-up-redis-and-a-web-app-with-docker-compose-b1cf353eb7a9]
@@ -46,7 +47,6 @@ CS554 - Final Project
 ### Dockerfiles and .env files
 
 1. An env file is neccessary to run the server portion of this application. The env file with the proper keys will be supplied upon submission of the project but here are the neccessary value for reference:
-<br>
 <br>
 SERVER_URL: mongodb://localhost:27017/
 <br>
@@ -86,9 +86,9 @@ AWS_BUCKET_NAME:
 <br>
 AWS_REGION: 
 <br>
-
-2. The Dockerfile for the server also has neccessary environment variables that must be correctly filled in. Here are the variables required for reference
 <br>
+2. The Dockerfile for the server also has neccessary environment variables that must be correctly filled in. Here are the variables required for reference
+
 ENV SERVER_URL='mongodb://host.docker.internal:27017/'
 <br>
 ENV DATABASE='CS554-FinalProject-DSATalk'
@@ -127,6 +127,7 @@ ENV AWS_BUCKET_NAME=""
 <br>
 ENV AWS_REGION="us-east-1"
 <br>
-
+<br>
 3. For the frontend there are no environment variables that need to be configured 
+<br> 
 4. **Important Note**: When running the application locally the values for REDIS_HOST in the Dockerfile and .env file must be 127.0.0.1, but when running with Docker the value for REDIS_HOST must be my-redis-service ,the name of the Docker container running redis
