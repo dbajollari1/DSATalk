@@ -1,3 +1,5 @@
+# code adpated from https://stackoverflow.com/questions/73623891/vite-react-docker
+
 FROM node:slim
 
 

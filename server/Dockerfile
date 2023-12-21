@@ -1,3 +1,5 @@
+# code adapted from https://betterstack.com/community/guides/scaling-nodejs/dockerize-nodejs/
+
 FROM node:slim
 
 WORKDIR /usr/src/app
