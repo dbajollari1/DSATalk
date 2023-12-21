@@ -47,11 +47,10 @@ async function doPasswordReset(email) {
   await sendPasswordResetEmail(auth, email);
 }
 
-async function doSignOut(navigate) {
+async function doSignOut() {
   try{
     let auth = getAuth();
     await auth.signOut();
-    navigate("/");
     window.location.reload();
 
   }catch(error){
