@@ -1,13 +1,16 @@
 import React, {useContext, useState} from 'react';
 import {AuthContext} from '../context/AuthContext';
 import {doChangePassword} from '../firebase/FirebaseFunctions';
+import {Navigate} from 'react-router-dom';
+
 import '../App.css';
 import { Button, TextField, Typography, FormHelperText } from '@mui/material';
 
 function ChangePassword() {
   const {currentUser} = useContext(AuthContext);
   const [pwMatch, setPwMatch] = useState('');
-  const [error, setError] = useState(''); 
+  const [error, setError] = useState('');
+  const [isPasswordSet, setPassword] = useState(false) 
   console.log(currentUser);
 
   const submitForm = async (event) => {
@@ -28,12 +31,15 @@ function ChangePassword() {
         newPasswordOne.value
       );
       alert('Password has been changed');
+      setPassword(true)
       
     } catch (error) {
       setError('Failed to change password. Please ensure your current password is correct.');
     }
   };
-  
+  if (isPasswordSet) {
+    return <Navigate to='/' />;
+  }
   if (currentUser.providerData[0].providerId === 'password') {
     return (
       <div>
