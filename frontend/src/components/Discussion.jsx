@@ -100,50 +100,41 @@ function Discussion() {
     }
 
     
-    const RootContainer = styled('div')({
-        padding: (theme) => theme.spacing(3),
-    });
 
-    const DiscussionContainer = styled('div')({
-        marginBottom: (theme) => theme.spacing(3),
-        padding: (theme) => theme.spacing(2),
-        border: '1px solid #ddd',
-        borderRadius: (theme) => theme.spacing(1),
-    });
+    const CommentContainer =  {
+        marginBottom: '10px',
+        padding: '10px',
+        border: '2px solid #ddd',
+        borderRadius: '5px',
 
-    const CommentContainer = styled('div')({
-        margin: (theme) => theme.spacing(2, 0),
-        padding: (theme) => theme.spacing(2),
-        border: '1px solid #eee',
-        borderRadius: (theme) => theme.spacing(1),
-    });
-
-    const ReplyContainer = styled('div')({
-        marginLeft: (theme) => theme.spacing(4),
-        marginBottom: (theme) => theme.spacing(2),
-        padding: (theme) => theme.spacing(2),
-        border: '1px solid #f0f0f0',
-        borderRadius: (theme) => theme.spacing(1),
-    });
-
-    const AddCommentButton = styled('div')({
-        margin: (theme) => theme.spacing(2, 0),
-    });
+    }
+  
+    const AddCommentButton = {
+        margin: '10px',
+        backgroundColor: 'white',
+        borderRadius: '10px',
+        fontWeight: 'bold',
+        fontSize: '15px',
+        '&:hover': {
+            backgroundColor: 'black',
+            color: 'white',
+        }
+    }
 
     
 
 
     return (
-        <div className={RootContainer}>
-            <div className={DiscussionContainer}>
+        <div >
+            <div >
                 <h1>{discussion.title}</h1>
                 <h3>Posted By {discussion.user?.username}</h3> 
                 <p>{discussion.content}</p>
                 {discussion.image ? <img src={discussion.image} alt="discussion image" /> : null}
                 <h3>Likes: {discussion.likes?.length}</h3>
-                <Button onClick={() => handleLike(discussion._id)} variant="outlined" className="AddCommentButton">Like</Button>
+                <Button onClick={() => handleLike(discussion._id)} variant="outlined" style={AddCommentButton}>Like</Button>
                 {curUser && curUser.data._id === discussion.user._id && (
-                    <div className="delete-button">
+                    <div style={AddCommentButton} >
                     <br></br>
                     <button onClick={() => handleDeleteDiscussion(discussion._id)} >
                     Delete Discussion
@@ -152,8 +143,8 @@ function Discussion() {
                 )}
             </div>
                 <div>
-                    <Typography variant="h5">Comments</Typography>
-                    <Button onClick={() => setShowAddCommentForm(!showAddCommentForm)} variant='outlined' className="AddCommentButton">Add Comment</Button>
+                    <h3 >Comments Below:</h3>
+                    <Button onClick={() => setShowAddCommentForm(!showAddCommentForm)} variant='outlined' style={AddCommentButton} >Add Comment</Button>
                     {showAddCommentForm && (
                         <AddCommentAndReply
                             open={showAddCommentForm}
@@ -163,16 +154,16 @@ function Discussion() {
                         />
                     )}
                     {discussion.comments?.map((comment) => (
-                        <Card key={comment._id} className="CommentContainer">
+                        <div key={comment._id} style={CommentContainer} >
                             <h4>Commented By {comment.authorUsername}</h4>
                             <p>{comment.content}</p>
                             {comment.replies?.map((reply) => (
-                                <Card key={reply._id} className="ReplyContainer">
+                                <div key={reply._id} >
                                     <h5> Reply By {reply.authorUsername}</h5>
                                     <p>{reply.content}</p>
-                                </Card>
+                                </div>
                             ))}
-                            <Button onClick={() => toggleAddReplyForm(comment._id)} variant="outlined" >Add Reply</Button>
+                            <Button onClick={() => toggleAddReplyForm(comment._id)} variant="outlined" style={AddCommentButton}>Add Reply</Button>
                             {showAddReplyForm[comment._id] && (
                                 <AddCommentAndReply
                                     open={true} 
@@ -183,7 +174,7 @@ function Discussion() {
                                     reply={true}
                                 />
                             )}
-                        </Card>
+                        </div>
                     ))}
                 </div>
         </div>
