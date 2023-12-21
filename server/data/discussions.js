@@ -18,17 +18,17 @@ const create = async (
     //userId = helpers.checkId(userId,"User ID");
     //username = helpers.validateUsername(username);
     content = helpers.checkContent(content);
-    // if(tags) { 
-    //    tags = helpers.checkTags(tags); 
-    // } else { 
-    //     tags = [];
-    // }
+    if(tags) { 
+       tags = helpers.checkTags(tags); 
+    } else { 
+        tags = [];
+    }
     if(image) { 
         image = helpers.checkURL(image)
     } else { 
         image = ""
     }
-    
+
     if (url) { 
         url = helpers.checkURL(url); 
     } else { 

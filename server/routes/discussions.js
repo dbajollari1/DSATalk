@@ -14,6 +14,9 @@ const redisClient = createClient({ url: 'redis://' + process.env.REDIS_HOST + ":
 redisClient.connect().then(() => { });
 
 
+// code to deal with s3 bucket adapted from https://abbaslanbay.medium.com/uploading-files-to-aws-s3-with-multer-and-the-node-js-aws-sdk-7cad8dc87fc2
+// and https://dev.to/paras594/upload-images-to-aws-s3-using-multer-in-nodejs-1164
+
 AWS.config.update({
   accessKeyId: process.env.ACCESS_KEY,
   secretAccessKey: process.env.SECRET_ACCESS_KEY,
@@ -92,9 +95,6 @@ router
     },
     async (req, res) => {
       try {
-        // if (!req.session.user) {
-        //   return res.status(401.).json({ error: "You must be logged in to look at the discussions" });
-        // }
         try {
           req.params.pagenum = helpers.checkPageNum(req.params.pagenum);
         } catch (e) {
@@ -139,9 +139,6 @@ router
     },
     async (req, res) => {
       try {
-        // if (!req.session.user) {
-        //   return res.status(401.).json({ error: "You must be logged in to look at the discussions" });
-        // }
         try {
           req.params.id = helpers.checkId(req.params.id, "Discussion ID");
         } catch (e) {
@@ -281,12 +278,6 @@ router
 router
   .route('/:id/likes')
   .post(
-    // (req, res, next) => {
-    //   if (!req.session.user) {
-    //     return res.status(401).json({ error: "You must be logged in to like a discussion!" });
-    //   }
-    //   next();
-    // },
     async (req, res) => {
       try {
         req.params.id = helpers.checkId(req.params.id, 'ID URL Param');

@@ -24,12 +24,6 @@ const updateAllDiscussionsRedis = async () => {
 router
     .route('/:id') //posting to the discussion id we are commenting on
     .post(
-        // async (req, res, next) => {
-        //   if (!req.session.user) {
-        //     return res.status(401.).json({ error: "You must be logged in to look at the discussions" });
-        //   }
-        //   next();
-        // },
         async (req, res) => {
             try {
                 req.params.id = helpers.checkId(req.params.id, 'ID URL Param');
@@ -75,12 +69,6 @@ router
 router
     .route('/:discussionId/:commentId')
     .delete(
-        // async (req, res, next) => {
-        //   if (!req.session.user) {
-        //     return res.status(401.).json({ error: "You must be logged in to look at the discussions" });
-        //   }
-        //   next();
-        // },
         async (req, res) => {
             try {
                 req.params.discussionId = helpers.checkId(req.params.discussionId, 'Discussion ID URL Param');
@@ -114,12 +102,6 @@ router
 router
     .route('/:discussionId/:commentId/reply')
     .post(
-        // async (req, res, next) => {
-        //   if (!req.session.user) {
-        //     return res.status(401.).json({ error: "You must be logged in to look at the discussions" });
-        //   }
-        //   next();
-        // },
         async (req, res) => {
             try {
                 req.params.discussionId = helpers.checkId(req.params.discussionId, 'Discussion ID URL Param');
@@ -165,12 +147,6 @@ router
 router
     .route('/:discussionId/:commentId/reply/delete/:replyId')
     .delete(
-        // async (req, res, next) => {
-        //   if (!req.session.user) {
-        //     return res.status(401.).json({ error: "You must be logged in to look at the discussions" });
-        //   }
-        //   next();
-        // },
         async (req, res) => {
             try {
                 req.params.discussionId = helpers.checkId(req.params.discussionId, 'Discussion ID URL Param');

@@ -3,7 +3,7 @@ const app = express();
 import configRoutes from './routes/index.js';
 import cors from 'cors';
 import admin from 'firebase-admin';
-import serviceAccount from './serviceAccountKey.js'; // Make sure to replace with your actual service account key
+import serviceAccount from './serviceAccountKey.js'; 
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -39,36 +39,7 @@ export const verifyToken = async (req, res, next) => {
 
 app.use('/',verifyToken);
 
-// const pathsAccessed = {};
 
-
-// app.use(async (req, res, next) => {
-//   //let timestamp = new Date().toUTCString();
-//   let reqMethod = req.method; 
-//   let reqBody = { ...req.body }; 
-//   if (reqMethod === "GET") { 
-//     reqBody = {} 
-//   }
-//   let reqPath = req.originalUrl;
-//   if (reqPath in pathsAccessed) { 
-//     pathsAccessed[reqPath] = pathsAccessed[reqPath] + 1;
-//   } else { 
-//     pathsAccessed[reqPath] = 1 
-//   }
-
-//   if ("password" in reqBody) { 
-//     delete reqBody["password"]; 
-//   }
-
-//   //console.log(`[${timestamp}]: ${reqMethod} ${reqPath} ${userType}`);
-//   console.log(
-//     `There have now been ${pathsAccessed[reqPath]} requests made to ${
-//       req.path} using a ${reqMethod} method.`);
-
-//   console.log("Request Body: ")
-//   console.log(reqBody);
-//   next();
-// });
 configRoutes(app);
 
 
